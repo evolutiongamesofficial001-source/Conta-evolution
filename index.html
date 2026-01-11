@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conta Evolution</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0a0014 0%, #1c0038 100%);
+            color: #e0d0ff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(20, 10, 50, 0.78);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            border: 1px solid rgba(200, 162, 200, 0.28);
+            padding: 45px 35px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
+            animation: fadeIn 0.8s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        h1, h2 {
+            color: #c8a2c8;
+            text-align: center;
+            margin-bottom: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-size: 0.95rem;
+            color: #d0c0ff;
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 16px 50px 16px 18px;
+            border: none;
+            border-radius: 14px;
+            background: rgba(60, 40, 90, 0.65);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(200, 162, 200, 0.5);
+            background: rgba(80, 50, 110, 0.8);
+        }
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-15%);
+            color: #c8a2c8;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: color 0.3s;
+        }
+        .toggle-password:hover { color: #e0c0ff; }
+        button {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #c8a2c8, #b590b5);
+            color: #0f001a;
+            font-weight: 600;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.35s;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(200, 162, 200, 0.4);
+        }
+        .switch-link {
+            color: #c8a2c8;
+            text-align: center;
+            display: block;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 0.98rem;
+            transition: all 0.3s;
+        }
+        .switch-link:hover {
+            color: #e0c0ff;
+            text-decoration: underline;
+        }
+        .message {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.92rem;
+            min-height: 20px;
+        }
+        .success { color: #90ff9c; }
+        .error   { color: #ff7a7a; }
+
+        /* Perfil */
+        #profile {
+            animation: fadeIn 0.8s ease-out;
+        }
+        .profile-card {
+            background: rgba(30, 20, 70, 0.75);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid rgba(200, 162, 200, 0.3);
+        }
+        .secure-badge {
+            font-size: 4.2rem;
+            margin-bottom: 24px;
+            display: inline-block;
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.12); }
+        }
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 0;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(200, 162, 200, 0.18);
+        }
+        .info-item:last-child { border-bottom: none; }
+        .info-label { color: #c8a2c8; font-weight: 500; }
+        .info-value { 
+            color: #f0e8ff; 
+            max-width: 60%; 
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .info-value.long-email {
+            font-size: 0.92rem;
+        }
+
+        .profile-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .btn-danger {
+            background: linear-gradient(90deg, #ff6b6b, #e55a5a);
+            color: white;
+        }
+        .btn-danger:hover {
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.45);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 540px;
+                padding: 55px 45px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Registro -->
+        <div id="register">
+            <h1>Conta Evolution</h1>
+            <p style="text-align:center; color:#d0c0ff; margin-bottom:36px;">Crie sua conta em segundos</p>
+            <form id="signupForm">
+                <div class="input-group">
+                    <label for="username">Nome de Usuário</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
+                    <i class="fas fa-eye toggle-password" id="togglePasswordReg"></i>
+                </div>
+                <button type="submit">Criar Conta</button>
+            </form>
+            <div id="registerMessage" class="message"></div>
+            <span class="switch-link" onclick="showLogin()">Já possui conta? Entrar</span>
+        </div>
+
+        <!-- Login -->
+        <div id="login" style="display:none;">
+            <h1>Entrar</h1>
+            <p style="text-align:center; color:#d0c0ff; margin-bottom:36px;">Acesse sua conta Evolution</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="loginUsername">Nome de Usuário</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required>
+                    <i class="fas fa-eye toggle-password" id="togglePasswordLogin"></i>
+                </div>
+                <button type="submit">Entrar</button>
+            </form>
+            <div id="loginMessage" class="message"></div>
+            <span class="switch-link" onclick="showRegister()">Não tem conta? Criar agora</span>
+        </div>
+
+        <!-- Perfil -->
+        <div id="profile" style="display:none;">
+            <h2>Seu Perfil</h2>
+            <div class="profile-card">
+                <div class="secure-badge">🔒</div>
+                <div class="info-item">
+                    <span class="info-label">Usuário</span>
+                    <span class="info-value" id="profileUsername"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Email</span>
+                    <span class="info-value long-email" id="profileEmail"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Senha</span>
+                    <span class="info-value" id="profilePassword"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">EvPoints</span>
+                    <span class="info-value" id="profileEvpoints">0</span>
+                </div>
+            </div>
+
+            <div class="profile-buttons">
+                <button onclick="logout()">Desconectar</button>
+                <button class="btn-danger" onclick="deleteAccount()">Excluir Conta</button>
+            </div>
+            <div id="profileMessage" class="message"></div>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        // Configurações Firebase (mantidas iguais)
+        const primaryConfig = { databaseURL: "https://contaevilution-default-rtdb.firebaseio.com/" };
+        const fallbackConfig = { databaseURL: "https://evolutioncinta2-default-rtdb.firebaseio.com/" };
+
+        firebase.initializeApp(primaryConfig);
+        let databases = { primary: firebase.database(), fallback: null };
+
+        function initFallback() {
+            if (!databases.fallback) {
+                const fallbackApp = firebase.initializeApp(fallbackConfig, "fallback");
+                databases.fallback = fallbackApp.database();
+            }
+        }
+
+        // Mostrar/esconder telas
+        function showRegister() { 
+            document.getElementById('register').style.display = 'block'; 
+            document.getElementById('login').style.display = 'none'; 
+            document.getElementById('profile').style.display = 'none'; 
+        }
+        function showLogin() { 
+            document.getElementById('register').style.display = 'none'; 
+            document.getElementById('login').style.display = 'block'; 
+            document.getElementById('profile').style.display = 'none'; 
+        }
+        function showProfile() { 
+            document.getElementById('register').style.display = 'none'; 
+            document.getElementById('login').style.display = 'none'; 
+            document.getElementById('profile').style.display = 'block'; 
+            loadProfile();
+        }
+
+        // Toggle senha
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('togglePasswordReg').addEventListener('click', () => 
+            togglePassword('password', 'togglePasswordReg'));
+        
+        document.getElementById('togglePasswordLogin').addEventListener('click', () => 
+            togglePassword('loginPassword', 'togglePasswordLogin'));
+
+        // Verifica se já logado
+        const loggedInUsername = localStorage.getItem('loggedInUsername');
+        const currentDBKey = localStorage.getItem('currentDBKey');
+        if (loggedInUsername && currentDBKey) {
+            showProfile();
+        } else {
+            showRegister();
+        }
+
+        // Função auxiliar para encurtar email
+        function shortenEmail(email) {
+            if (email.length <= 28) return email;
+            const [name, domain] = email.split('@');
+            if (name.length <= 15) return email;
+            return name.slice(0, 12) + '...' + name.slice(-3) + '@' + domain;
+        }
+
+        // Registro
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const msg = document.getElementById('registerMessage');
+
+            if (!username || !email || !password) {
+                msg.textContent = 'Preencha todos os campos'; msg.className = 'message error'; return;
+            }
+
+            let currentDB = 'primary'; let db = databases.primary;
+            try {
+                const userRef = db.ref('users/' + username);
+                if ((await userRef.once('value')).exists()) {
+                    msg.textContent = 'Usuário já existe'; msg.className = 'message error'; return;
+                }
+                await userRef.set({ username, email, password, evpoints: 0 });
+            } catch {
+                initFallback(); currentDB = 'fallback'; db = databases.fallback;
+                try {
+                    const userRef = db.ref('users/' + username);
+                    if ((await userRef.once('value')).exists()) {
+                        msg.textContent = 'Usuário já existe'; msg.className = 'message error'; return;
+                    }
+                    await userRef.set({ username, email, password, evpoints: 0 });
+                } catch {
+                    msg.textContent = 'Erro ao criar conta'; msg.className = 'message error'; return;
+                }
+            }
+
+            msg.textContent = 'Conta criada com sucesso!'; msg.className = 'message success';
+            localStorage.setItem('loggedInUsername', username);
+            localStorage.setItem('currentDBKey', currentDB);
+            setTimeout(showProfile, 1600);
+        });
+
+        // Login (mantido similar)
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const msg = document.getElementById('loginMessage');
+
+            let found = false; let currentDB = 'primary'; let db = databases.primary;
+
+            try {
+                const snap = await db.ref('users/' + username).once('value');
+                if (snap.exists() && snap.val().password === password) found = true;
+            } catch {}
+
+            if (!found) {
+                initFallback(); currentDB = 'fallback'; db = databases.fallback;
+                try {
+                    const snap = await db.ref('users/' + username).once('value');
+                    if (snap.exists() && snap.val().password === password) found = true;
+                } catch {}
+            }
+
+            if (found) {
+                msg.textContent = 'Bem-vindo de volta!'; msg.className = 'message success';
+                localStorage.setItem('loggedInUsername', username);
+                localStorage.setItem('currentDBKey', currentDB);
+                setTimeout(showProfile, 1600);
+            } else {
+                msg.textContent = 'Credenciais inválidas'; msg.className = 'message error';
+            }
+        });
+
+        // Carregar perfil com email resumido
+        async function loadProfile() {
+            const username = localStorage.getItem('loggedInUsername');
+            const dbKey = localStorage.getItem('currentDBKey');
+            if (!username || !dbKey) return logout();
+
+            try {
+                const snap = await databases[dbKey].ref('users/' + username).once('value');
+                if (snap.exists()) {
+                    const data = snap.val();
+                    document.getElementById('profileUsername').textContent = data.username;
+                    document.getElementById('profileEmail').textContent = shortenEmail(data.email);
+                    document.getElementById('profilePassword').textContent = data.password;
+                    document.getElementById('profileEvpoints').textContent = data.evpoints;
+                }
+            } catch (e) {
+                document.getElementById('profileMessage').textContent = 'Erro ao carregar perfil';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            showLogin();
+        }
+
+        async function deleteAccount() {
+            if (!confirm('Deseja realmente excluir sua conta?')) return;
+            const username = localStorage.getItem('loggedInUsername');
+            const dbKey = localStorage.getItem('currentDBKey');
+            if (!username || !dbKey) return logout();
+
+            try {
+                await databases[dbKey].ref('users/' + username).remove();
+                document.getElementById('profileMessage').textContent = 'Conta excluída com sucesso';
+                document.getElementById('profileMessage').className = 'message success';
+                setTimeout(logout, 1800);
+            } catch (e) {
+                document.getElementById('profileMessage').textContent = 'Erro ao excluir';
+            }
+        }
+    </script>
+</body>
+</html>
