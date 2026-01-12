@@ -160,6 +160,22 @@
         .info-value.long-email {
             font-size: 0.92rem;
         }
+        .rank-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(50, 30, 80, 0.6);
+            border-radius: 14px;
+        }
+        .rank-logo {
+            font-size: 3.5rem;
+            margin-bottom: 8px;
+        }
+        .rank-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #c8a2c8;
+        }
 
         .profile-buttons {
             display: flex;
@@ -250,6 +266,10 @@
                 <div class="info-item">
                     <span class="info-label">EvPoints</span>
                     <span class="info-value" id="profileEvpoints">0</span>
+                </div>
+                <div class="rank-section">
+                    <div class="rank-logo" id="rankLogo"></div>
+                    <div class="rank-name" id="rankName"></div>
                 </div>
             </div>
 
@@ -405,7 +425,7 @@
             }
         });
 
-        // Carregar perfil com email resumido
+        // Carregar perfil com email resumido e sistema de patente
         async function loadProfile() {
             const username = localStorage.getItem('loggedInUsername');
             const dbKey = localStorage.getItem('currentDBKey');
@@ -419,6 +439,31 @@
                     document.getElementById('profileEmail').textContent = shortenEmail(data.email);
                     document.getElementById('profilePassword').textContent = data.password;
                     document.getElementById('profileEvpoints').textContent = data.evpoints;
+
+                    // Calcular patente baseada em evpoints
+                    const points = data.evpoints;
+                    let rank = 'Bronze';
+                    let logo = '🥉'; // Logo para Bronze
+
+                    if (points >= 501 && points <= 800) {
+                        rank = 'Prata';
+                        logo = '🥈';
+                    } else if (points >= 801 && points <= 1000) {
+                        rank = 'Platina';
+                        logo = '🏆';
+                    } else if (points >= 1001 && points <= 2000) {
+                        rank = 'Diamante';
+                        logo = '💎';
+                    } else if (points >= 2001 && points <= 3000) {
+                        rank = 'Mestre';
+                        logo = '🧙';
+                    } else if (points >= 3001) {
+                        rank = 'Fênix';
+                        logo = '🔥';
+                    }
+
+                    document.getElementById('rankLogo').textContent = logo;
+                    document.getElementById('rankName').textContent = rank;
                 }
             } catch (e) {
                 document.getElementById('profileMessage').textContent = 'Erro ao carregar perfil';
