@@ -1,495 +1,718 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conta Evolution</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0014 0%, #1c0038 100%);
-            color: #e0d0ff;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background: rgba(20, 10, 50, 0.78);
-            backdrop-filter: blur(12px);
-            border-radius: 28px;
-            border: 1px solid rgba(200, 162, 200, 0.28);
-            padding: 45px 35px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.65);
-            animation: fadeIn 0.8s ease-out;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        h1, h2 {
-            color: #c8a2c8;
-            text-align: center;
-            margin-bottom: 24px;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        .input-group {
-            position: relative;
-            margin-bottom: 24px;
-        }
-        label {
-            display: block;
-            font-size: 0.95rem;
-            color: #d0c0ff;
-            margin-bottom: 8px;
-        }
-        input {
-            width: 100%;
-            padding: 16px 50px 16px 18px;
-            border: none;
-            border-radius: 14px;
-            background: rgba(60, 40, 90, 0.65);
-            color: white;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(200, 162, 200, 0.5);
-            background: rgba(80, 50, 110, 0.8);
-        }
-        .toggle-password {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-15%);
-            color: #c8a2c8;
-            cursor: pointer;
-            font-size: 1.3rem;
-            transition: color 0.3s;
-        }
-        .toggle-password:hover { color: #e0c0ff; }
-        button {
-            width: 100%;
-            padding: 16px;
-            border: none;
-            border-radius: 14px;
-            background: linear-gradient(90deg, #c8a2c8, #b590b5);
-            color: #0f001a;
-            font-weight: 600;
-            font-size: 1.05rem;
-            cursor: pointer;
-            transition: all 0.35s;
-        }
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(200, 162, 200, 0.4);
-        }
-        .switch-link {
-            color: #c8a2c8;
-            text-align: center;
-            display: block;
-            margin-top: 20px;
-            cursor: pointer;
-            font-size: 0.98rem;
-            transition: all 0.3s;
-        }
-        .switch-link:hover {
-            color: #e0c0ff;
-            text-decoration: underline;
-        }
-        .message {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 0.92rem;
-            min-height: 20px;
-        }
-        .success { color: #90ff9c; }
-        .error   { color: #ff7a7a; }
-
-        /* Perfil */
-        #profile {
-            animation: fadeIn 0.8s ease-out;
-        }
-        .profile-card {
-            background: rgba(30, 20, 70, 0.75);
-            border-radius: 20px;
-            padding: 32px;
-            margin-bottom: 32px;
-            border: 1px solid rgba(200, 162, 200, 0.3);
-        }
-        .secure-badge {
-            font-size: 4.2rem;
-            margin-bottom: 24px;
-            display: inline-block;
-            animation: pulse 2.5s infinite ease-in-out;
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.12); }
-        }
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 18px 0;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(200, 162, 200, 0.18);
-        }
-        .info-item:last-child { border-bottom: none; }
-        .info-label { color: #c8a2c8; font-weight: 500; }
-        .info-value { 
-            color: #f0e8ff; 
-            max-width: 60%; 
-            text-align: right;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .info-value.long-email {
-            font-size: 0.92rem;
-        }
-        .rank-section {
-            text-align: center;
-            margin-top: 20px;
-            padding: 16px;
-            background: rgba(50, 30, 80, 0.6);
-            border-radius: 14px;
-        }
-        .rank-logo {
-            font-size: 3.5rem;
-            margin-bottom: 8px;
-        }
-        .rank-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #c8a2c8;
-        }
-
-        .profile-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        .btn-danger {
-            background: linear-gradient(90deg, #ff6b6b, #e55a5a);
-            color: white;
-        }
-        .btn-danger:hover {
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.45);
-        }
-
-        @media (min-width: 768px) {
-            .container {
-                max-width: 540px;
-                padding: 55px 45px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Evolution — Account</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <div class="container">
+  <!-- SPLASH -->
+  <div id="splash" class="splash">
+    <div class="splash-logo">
+      <div class="splash-wordmark">EVO</div>
+      <div class="splash-bar"></div>
+    </div>
+  </div>
 
-        <!-- Registro -->
-        <div id="register">
-            <h1>Conta Evolution</h1>
-            <p style="text-align:center; color:#d0c0ff; margin-bottom:36px;">Crie sua conta em segundos</p>
-            <form id="signupForm">
-                <div class="input-group">
-                    <label for="username">Nome de Usuário</label>
-                    <input type="text" id="username" required>
-                </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" required>
-                    <i class="fas fa-eye toggle-password" id="togglePasswordReg"></i>
-                </div>
-                <button type="submit">Criar Conta</button>
-            </form>
-            <div id="registerMessage" class="message"></div>
-            <span class="switch-link" onclick="showLogin()">Já possui conta? Entrar</span>
+  <!-- APP -->
+  <div id="app" class="app hidden">
+
+    <!-- ══ AUTH SCREEN ══ -->
+    <div id="auth-screen" class="screen active">
+      <div class="auth-bg">
+        <div class="grid-lines"></div>
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+      </div>
+
+      <div class="auth-container">
+        <div class="auth-brand">
+          <span class="brand-name">Evolution</span>
+          <span class="brand-tag">Account System</span>
         </div>
 
-        <!-- Login -->
-        <div id="login" style="display:none;">
-            <h1>Entrar</h1>
-            <p style="text-align:center; color:#d0c0ff; margin-bottom:36px;">Acesse sua conta Evolution</p>
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="loginUsername">Nome de Usuário</label>
-                    <input type="text" id="loginUsername" required>
-                </div>
-                <div class="input-group">
-                    <label for="loginPassword">Senha</label>
-                    <input type="password" id="loginPassword" required>
-                    <i class="fas fa-eye toggle-password" id="togglePasswordLogin"></i>
-                </div>
-                <button type="submit">Entrar</button>
-            </form>
-            <div id="loginMessage" class="message"></div>
-            <span class="switch-link" onclick="showRegister()">Não tem conta? Criar agora</span>
-        </div>
+        <!-- LOGIN -->
+        <div id="login-form" class="auth-card">
+          <h2 class="form-title">Entrar</h2>
+          <p class="form-sub">Bem-vindo de volta.</p>
 
-        <!-- Perfil -->
-        <div id="profile" style="display:none;">
-            <h2>Seu Perfil</h2>
-            <div class="profile-card">
-                <div class="secure-badge">🔒</div>
-                <div class="info-item">
-                    <span class="info-label">Usuário</span>
-                    <span class="info-value" id="profileUsername"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Email</span>
-                    <span class="info-value long-email" id="profileEmail"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Senha</span>
-                    <span class="info-value" id="profilePassword"></span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">EvPoints</span>
-                    <span class="info-value" id="profileEvpoints">0</span>
-                </div>
-                <div class="rank-section">
-                    <div class="rank-logo" id="rankLogo"></div>
-                    <div class="rank-name" id="rankName"></div>
-                </div>
+          <div class="input-group">
+            <label>Email ou Username</label>
+            <input type="text" id="login-identifier" placeholder="voce@email.com" autocomplete="off" autocapitalize="none" />
+          </div>
+          <div class="input-group">
+            <label>Senha</label>
+            <div class="input-pw-wrap">
+              <input type="password" id="login-password" placeholder="••••••••" />
+              <button class="pw-toggle" onclick="togglePw('login-password', this)" type="button">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
             </div>
+          </div>
 
-            <div class="profile-buttons">
-                <button onclick="logout()">Desconectar</button>
-                <button class="btn-danger" onclick="deleteAccount()">Excluir Conta</button>
-            </div>
-            <div id="profileMessage" class="message"></div>
+          <button class="btn-link forgot-link" onclick="showScreen('forgot-form')" type="button">Esqueci minha senha</button>
+
+          <button class="btn-primary" onclick="handleLogin()" type="button" id="login-btn">
+            <span>Acessar</span>
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+
+          <p class="auth-switch">Não tem conta? <button class="btn-link" onclick="showScreen('register-form')" type="button">Criar agora</button></p>
+          <div id="login-error" class="error-msg hidden"></div>
         </div>
 
+        <!-- REGISTER -->
+        <div id="register-form" class="auth-card hidden">
+          <h2 class="form-title">Criar Conta</h2>
+          <p class="form-sub">Junte-se à Evolution.</p>
+
+          <div class="form-grid-2">
+            <div class="input-group">
+              <label>Nome Completo</label>
+              <input type="text" id="reg-name" placeholder="Seu nome" autocomplete="name" />
+            </div>
+            <div class="input-group">
+              <label>Username</label>
+              <div class="input-prefix-wrap">
+                <span class="prefix">@</span>
+                <input type="text" id="reg-username" placeholder="username" autocapitalize="none" />
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" placeholder="voce@email.com" autocomplete="email" />
+          </div>
+
+          <div class="form-grid-2">
+            <div class="input-group">
+              <label>Senha</label>
+              <div class="input-pw-wrap">
+                <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password" />
+                <button class="pw-toggle" onclick="togglePw('reg-password', this)" type="button">
+                  <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>Data de Nascimento</label>
+              <input type="date" id="reg-dob" />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>País</label>
+            <select id="reg-country">
+              <option value="">Selecione...</option>
+              <option value="BR">🇧🇷 Brasil</option>
+              <option value="US">🇺🇸 Estados Unidos</option>
+              <option value="PT">🇵🇹 Portugal</option>
+              <option value="AR">🇦🇷 Argentina</option>
+              <option value="FR">🇫🇷 França</option>
+              <option value="DE">🇩🇪 Alemanha</option>
+              <option value="JP">🇯🇵 Japão</option>
+              <option value="GB">🇬🇧 Reino Unido</option>
+              <option value="CA">🇨🇦 Canadá</option>
+              <option value="MX">🇲🇽 México</option>
+              <option value="OTHER">🌍 Outro</option>
+            </select>
+          </div>
+
+          <div class="input-group">
+            <label>Pergunta de segurança <span class="label-hint">(usada na recuperação de senha)</span></label>
+            <select id="reg-sec-question">
+              <option value="">Selecione uma pergunta...</option>
+              <option value="pet">Qual o nome do seu primeiro animal de estimação?</option>
+              <option value="city">Em qual cidade você nasceu?</option>
+              <option value="school">Qual o nome da sua primeira escola?</option>
+              <option value="mother">Qual o nome do meio da sua mãe?</option>
+              <option value="car">Qual foi o modelo do seu primeiro carro?</option>
+            </select>
+            <input type="text" id="reg-sec-answer" placeholder="Sua resposta secreta" style="margin-top:8px" />
+          </div>
+
+          <button class="btn-primary" onclick="handleRegister()" type="button" id="register-btn">
+            <span>Continuar</span>
+            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+
+          <p class="auth-switch">Já tem conta? <button class="btn-link" onclick="showScreen('login-form')" type="button">Entrar</button></p>
+          <div id="register-error" class="error-msg hidden"></div>
+        </div>
+
+        <!-- EMAIL VERIFICATION — link via email -->
+        <div id="verify-form" class="auth-card hidden">
+          <div class="verify-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <h2 class="form-title">Verifique seu Email</h2>
+          <p class="form-sub">Enviamos um link de verificação para <strong id="verify-email-display"></strong></p>
+
+          <div class="verify-steps">
+            <div class="verify-step">
+              <div class="step-num">1</div>
+              <div class="step-text">Abra sua caixa de entrada</div>
+            </div>
+            <div class="verify-step">
+              <div class="step-num">2</div>
+              <div class="step-text">Clique no link <strong>"Verificar minha conta"</strong></div>
+            </div>
+            <div class="verify-step">
+              <div class="step-num">3</div>
+              <div class="step-text">Volte aqui e clique em <strong>Já verifiquei</strong></div>
+            </div>
+          </div>
+
+          <button class="btn-primary" onclick="handleVerifyEmail()" type="button" id="verify-btn">
+            <span>Já verifiquei</span>
+            <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+          </button>
+
+          <button class="btn-secondary" onclick="resendVerification()" type="button" style="margin-top:10px">
+            Reenviar email
+          </button>
+
+          <div id="verify-error" class="error-msg hidden"></div>
+          <div id="verify-success" class="success-msg hidden"></div>
+        </div>
+
+        <!-- FORGOT PASSWORD -->
+        <div id="forgot-form" class="auth-card hidden">
+          <h2 class="form-title">Recuperar Acesso</h2>
+          <p class="form-sub">Responda sua pergunta de segurança.</p>
+
+          <div class="input-group">
+            <label>Email da conta</label>
+            <input type="email" id="forgot-email" placeholder="voce@email.com" />
+          </div>
+
+          <button class="btn-secondary" onclick="loadSecurityQuestion()" type="button" style="margin-bottom:16px">Buscar pergunta</button>
+
+          <div id="sec-question-block" class="hidden">
+            <div class="input-group">
+              <label id="sec-question-label">—</label>
+              <input type="text" id="forgot-answer" placeholder="Sua resposta" />
+            </div>
+            <div class="input-group">
+              <label>Nova Senha</label>
+              <input type="password" id="forgot-new-pw" placeholder="••••••••" />
+            </div>
+            <button class="btn-primary" onclick="handleResetPassword()" type="button">
+              <span>Redefinir Senha</span>
+              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+
+          <button class="btn-link" onclick="showScreen('login-form')" type="button" style="margin-top:16px">← Voltar</button>
+          <div id="forgot-error" class="error-msg hidden"></div>
+        </div>
+      </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script>
-        // Configurações Firebase (mantidas iguais)
-        const primaryConfig = { databaseURL: "https://contaevilution-default-rtdb.firebaseio.com/" };
-        const fallbackConfig = { databaseURL: "https://evolutioncinta2-default-rtdb.firebaseio.com/" };
+    <!-- ══ DASHBOARD ══ -->
+    <div id="dashboard-screen" class="screen hidden">
 
-        firebase.initializeApp(primaryConfig);
-        let databases = { primary: firebase.database(), fallback: null };
+      <!-- SIDEBAR (desktop) -->
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <div class="brand-dot"></div>
+          <span>EVO</span>
+        </div>
 
-        function initFallback() {
-            if (!databases.fallback) {
-                const fallbackApp = firebase.initializeApp(fallbackConfig, "fallback");
-                databases.fallback = fallbackApp.database();
-            }
-        }
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-tab="profile" onclick="switchTab('profile', this)" type="button">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Perfil</span>
+          </button>
+          <button class="nav-item" data-tab="activity" onclick="switchTab('activity', this)" type="button">
+            <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+            <span>Atividade</span>
+          </button>
+          <button class="nav-item" data-tab="notifications" onclick="switchTab('notifications', this)" type="button">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span>Notificações</span>
+            <div class="notif-badge" id="notif-badge" style="display:none">0</div>
+          </button>
+          <button class="nav-item" data-tab="settings" onclick="switchTab('settings', this)" type="button">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>Configurações</span>
+          </button>
+        </nav>
 
-        // Mostrar/esconder telas
-        function showRegister() { 
-            document.getElementById('register').style.display = 'block'; 
-            document.getElementById('login').style.display = 'none'; 
-            document.getElementById('profile').style.display = 'none'; 
-        }
-        function showLogin() { 
-            document.getElementById('register').style.display = 'none'; 
-            document.getElementById('login').style.display = 'block'; 
-            document.getElementById('profile').style.display = 'none'; 
-        }
-        function showProfile() { 
-            document.getElementById('register').style.display = 'none'; 
-            document.getElementById('login').style.display = 'none'; 
-            document.getElementById('profile').style.display = 'block'; 
-            loadProfile();
-        }
+        <button class="nav-item nav-logout" onclick="confirmLogout()" type="button">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sair</span>
+        </button>
+      </aside>
 
-        // Toggle senha
-        function togglePassword(inputId, iconId) {
-            const input = document.getElementById(inputId);
-            const icon = document.getElementById(iconId);
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-            }
-        }
+      <!-- BOTTOM NAV (mobile) -->
+      <nav class="bottom-nav" id="bottom-nav">
+        <button class="bnav-item active" data-tab="profile" onclick="switchTab('profile', this)" type="button">
+          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Perfil</span>
+        </button>
+        <button class="bnav-item" data-tab="activity" onclick="switchTab('activity', this)" type="button">
+          <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+          <span>Atividade</span>
+        </button>
+        <button class="bnav-item" data-tab="notifications" onclick="switchTab('notifications', this)" type="button">
+          <div class="bnav-icon-wrap">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <div class="bnav-badge" id="bnav-badge" style="display:none"></div>
+          </div>
+          <span>Notificações</span>
+        </button>
+        <button class="bnav-item" data-tab="settings" onclick="switchTab('settings', this)" type="button">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Config.</span>
+        </button>
+        <button class="bnav-item bnav-logout" onclick="confirmLogout()" type="button">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          <span>Sair</span>
+        </button>
+      </nav>
 
-        document.getElementById('togglePasswordReg').addEventListener('click', () => 
-            togglePassword('password', 'togglePasswordReg'));
-        
-        document.getElementById('togglePasswordLogin').addEventListener('click', () => 
-            togglePassword('loginPassword', 'togglePasswordLogin'));
+      <!-- MAIN CONTENT -->
+      <main class="main-content">
 
-        // Verifica se já logado
-        const loggedInUsername = localStorage.getItem('loggedInUsername');
-        const currentDBKey = localStorage.getItem('currentDBKey');
-        if (loggedInUsername && currentDBKey) {
-            showProfile();
-        } else {
-            showRegister();
-        }
+        <!-- PROFILE TAB -->
+        <section id="tab-profile" class="tab-section active">
+          <div class="tab-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+              <h1>Meu Perfil</h1>
+              <p class="tab-sub">Gerencie sua identidade Evolution</p>
+            </div>
+            <button class="btn-ghost-sm" onclick="openEditProfile()" type="button" style="flex-shrink:0;margin-top:8px">
+              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              Editar Perfil
+            </button>
+          </div>
 
-        // Função auxiliar para encurtar email
-        function shortenEmail(email) {
-            if (email.length <= 28) return email;
-            const [name, domain] = email.split('@');
-            if (name.length <= 15) return email;
-            return name.slice(0, 12) + '...' + name.slice(-3) + '@' + domain;
-        }
+          <!-- Profile completion bar -->
+          <div class="profile-completion" id="profile-completion">
+            <div class="completion-header">
+              <span class="completion-label">Perfil completo</span>
+              <span class="completion-pct" id="completion-pct">0%</span>
+            </div>
+            <div class="completion-bar"><div class="completion-fill" id="completion-fill"></div></div>
+            <div class="completion-tips" id="completion-tips"></div>
+          </div>
 
-        // Registro
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const msg = document.getElementById('registerMessage');
+          <div class="profile-hero">
+            <div class="avatar-zone">
+              <div class="avatar-ring">
+                <div class="avatar-wrap" id="avatar-display">
+                  <img id="avatar-img" src="" alt="Avatar" class="hidden" />
+                  <div id="avatar-initials" class="avatar-initials"></div>
+                </div>
+              </div>
+              <button class="avatar-edit-btn" onclick="document.getElementById('avatar-input').click()" type="button">
+                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              </button>
+              <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)" />
+            </div>
+            <div class="profile-info-hero">
+              <h2 id="profile-display-name">—</h2>
+              <p id="profile-display-username" class="username-tag"></p>
+              <p id="profile-display-bio" class="profile-bio-text"></p>
+              <div class="profile-badges" id="profile-badges"></div>
+              <div class="evo-id-pill" id="evo-id-pill">
+                <span class="evo-id-label">EVO ID</span>
+                <span id="evo-id-value">—</span>
+                <button onclick="copyEvoId()" class="copy-mini" type="button">
+                  <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
 
-            if (!username || !email || !password) {
-                msg.textContent = 'Preencha todos os campos'; msg.className = 'message error'; return;
-            }
+          <div class="profile-cards">
+            <div class="info-card">
+              <div class="info-card-title">Informações Pessoais</div>
+              <div class="info-row">
+                <span class="info-label">Nome</span>
+                <span class="info-value" id="info-name">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value" id="info-email">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">País</span>
+                <span class="info-value" id="info-country">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Nascimento</span>
+                <span class="info-value" id="info-dob">—</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Membro desde</span>
+                <span class="info-value" id="info-joined">—</span>
+              </div>
+            </div>
 
-            let currentDB = 'primary'; let db = databases.primary;
-            try {
-                const userRef = db.ref('users/' + username);
-                if ((await userRef.once('value')).exists()) {
-                    msg.textContent = 'Usuário já existe'; msg.className = 'message error'; return;
-                }
-                await userRef.set({ username, email, password, evpoints: 0 });
-            } catch {
-                initFallback(); currentDB = 'fallback'; db = databases.fallback;
-                try {
-                    const userRef = db.ref('users/' + username);
-                    if ((await userRef.once('value')).exists()) {
-                        msg.textContent = 'Usuário já existe'; msg.className = 'message error'; return;
-                    }
-                    await userRef.set({ username, email, password, evpoints: 0 });
-                } catch {
-                    msg.textContent = 'Erro ao criar conta'; msg.className = 'message error'; return;
-                }
-            }
+            <div class="info-card stats-card">
+              <div class="info-card-title">Conta Evolution</div>
+              <div class="stat-grid">
+                <div class="stat-item">
+                  <div class="stat-num" id="stat-evo-id">—</div>
+                  <div class="stat-label">EVO ID</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num" id="stat-notifs">0</div>
+                  <div class="stat-label">Notificações</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num" id="stat-days">0</div>
+                  <div class="stat-label">Dias ativo</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            msg.textContent = 'Conta criada com sucesso!'; msg.className = 'message success';
-            localStorage.setItem('loggedInUsername', username);
-            localStorage.setItem('currentDBKey', currentDB);
-            setTimeout(showProfile, 1600);
-        });
+        <!-- ACTIVITY TAB -->
+        <section id="tab-activity" class="tab-section hidden">
+          <div class="tab-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+            <div>
+              <h1>Atividade</h1>
+              <p class="tab-sub">Histórico de acessos e ações da conta</p>
+            </div>
+            <button class="btn-ghost-sm" onclick="clearActivityLog()" type="button" style="flex-shrink:0;margin-top:8px">
+              <svg viewBox="0 0 24 24" width="13" height="13"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+              Limpar
+            </button>
+          </div>
 
-        // Login (mantido similar)
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            const msg = document.getElementById('loginMessage');
+          <!-- Session info card -->
+          <div class="activity-session-card" id="activity-session-card">
+            <div class="session-dot"></div>
+            <div style="flex:1;min-width:0">
+              <div class="session-title">Sessão Atual</div>
+              <div class="session-details" id="session-details">Calculando...</div>
+            </div>
+            <div class="session-status">Online</div>
+          </div>
 
-            let found = false; let currentDB = 'primary'; let db = databases.primary;
+          <!-- Stats row -->
+          <div class="activity-stats-row" id="activity-stats-row">
+            <div class="activity-stat">
+              <div class="activity-stat-num" id="astat-logins">0</div>
+              <div class="activity-stat-label">Logins</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-num" id="astat-actions">0</div>
+              <div class="activity-stat-label">Ações</div>
+            </div>
+            <div class="activity-stat">
+              <div class="activity-stat-num" id="astat-days">0</div>
+              <div class="activity-stat-label">Dias</div>
+            </div>
+          </div>
 
-            try {
-                const snap = await db.ref('users/' + username).once('value');
-                if (snap.exists() && snap.val().password === password) found = true;
-            } catch {}
+          <div id="activity-log" class="activity-log">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
+              <p>Nenhuma atividade registrada</p>
+            </div>
+          </div>
+        </section>
 
-            if (!found) {
-                initFallback(); currentDB = 'fallback'; db = databases.fallback;
-                try {
-                    const snap = await db.ref('users/' + username).once('value');
-                    if (snap.exists() && snap.val().password === password) found = true;
-                } catch {}
-            }
+        <!-- NOTIFICATIONS TAB -->
+        <section id="tab-notifications" class="tab-section hidden">
+          <div class="tab-header">
+            <h1>Notificações</h1>
+            <p class="tab-sub">Suas mensagens e atualizações</p>
+          </div>
 
-            if (found) {
-                msg.textContent = 'Bem-vindo de volta!'; msg.className = 'message success';
-                localStorage.setItem('loggedInUsername', username);
-                localStorage.setItem('currentDBKey', currentDB);
-                setTimeout(showProfile, 1600);
-            } else {
-                msg.textContent = 'Credenciais inválidas'; msg.className = 'message error';
-            }
-        });
+          <div class="notif-toolbar">
+            <button class="btn-ghost-sm" onclick="markAllRead()" type="button">Marcar todas como lidas</button>
+            <span id="notif-count-label" class="notif-count-text">0 notificações</span>
+          </div>
 
-        // Carregar perfil com email resumido e sistema de patente
-        async function loadProfile() {
-            const username = localStorage.getItem('loggedInUsername');
-            const dbKey = localStorage.getItem('currentDBKey');
-            if (!username || !dbKey) return logout();
+          <div id="notif-list" class="notif-list">
+            <div class="empty-state">
+              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <p>Nenhuma notificação ainda</p>
+            </div>
+          </div>
+        </section>
 
-            try {
-                const snap = await databases[dbKey].ref('users/' + username).once('value');
-                if (snap.exists()) {
-                    const data = snap.val();
-                    document.getElementById('profileUsername').textContent = data.username;
-                    document.getElementById('profileEmail').textContent = shortenEmail(data.email);
-                    document.getElementById('profilePassword').textContent = data.password;
-                    document.getElementById('profileEvpoints').textContent = data.evpoints;
+        <!-- SETTINGS TAB -->
+        <section id="tab-settings" class="tab-section hidden">
+          <div class="tab-header">
+            <h1>Configurações</h1>
+            <p class="tab-sub">Personalize sua experiência</p>
+          </div>
 
-                    // Calcular patente baseada em evpoints
-                    const points = data.evpoints;
-                    let rank = 'Bronze';
-                    let logo = '🥉'; // Logo para Bronze
+          <div class="settings-sections">
 
-                    if (points >= 501 && points <= 800) {
-                        rank = 'Prata';
-                        logo = '🥈';
-                    } else if (points >= 801 && points <= 1000) {
-                        rank = 'Platina';
-                        logo = '🏆';
-                    } else if (points >= 1001 && points <= 2000) {
-                        rank = 'Diamante';
-                        logo = '💎';
-                    } else if (points >= 2001 && points <= 3000) {
-                        rank = 'Mestre';
-                        logo = '🧙';
-                    } else if (points >= 3001) {
-                        rank = 'Fênix';
-                        logo = '🔥';
-                    }
+            <div class="settings-block">
+              <div class="settings-block-title">Aparência</div>
 
-                    document.getElementById('rankLogo').textContent = logo;
-                    document.getElementById('rankName').textContent = rank;
-                }
-            } catch (e) {
-                document.getElementById('profileMessage').textContent = 'Erro ao carregar perfil';
-            }
-        }
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Tema</div>
+                  <div class="setting-desc">Alterne entre modo escuro e claro</div>
+                </div>
+                <div class="theme-toggle-wrap">
+                  <button class="theme-btn" id="theme-dark-btn" onclick="setTheme('dark')" type="button">
+                    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    Escuro
+                  </button>
+                  <button class="theme-btn" id="theme-light-btn" onclick="setTheme('light')" type="button">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    Claro
+                  </button>
+                </div>
+              </div>
 
-        function logout() {
-            localStorage.clear();
-            showLogin();
-        }
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Modo Compacto</div>
+                  <div class="setting-desc">Reduz espaçamentos para telas menores</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="compact-mode-toggle" onchange="toggleCompactMode(this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
 
-        async function deleteAccount() {
-            if (!confirm('Deseja realmente excluir sua conta?')) return;
-            const username = localStorage.getItem('loggedInUsername');
-            const dbKey = localStorage.getItem('currentDBKey');
-            if (!username || !dbKey) return logout();
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Idioma</div>
+                  <div class="setting-desc">Idioma da interface</div>
+                </div>
+                <select class="setting-select" id="language-select" onchange="saveSetting('language', this.value)">
+                  <option value="pt-BR">🇧🇷 Português (BR)</option>
+                  <option value="en">🇺🇸 English</option>
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="fr">🇫🇷 Français</option>
+                  <option value="de">🇩🇪 Deutsch</option>
+                  <option value="ja">🇯🇵 日本語</option>
+                </select>
+              </div>
+            </div>
 
-            try {
-                await databases[dbKey].ref('users/' + username).remove();
-                document.getElementById('profileMessage').textContent = 'Conta excluída com sucesso';
-                document.getElementById('profileMessage').className = 'message success';
-                setTimeout(logout, 1800);
-            } catch (e) {
-                document.getElementById('profileMessage').textContent = 'Erro ao excluir';
-            }
-        }
-    </script>
+            <div class="settings-block">
+              <div class="settings-block-title">Conta</div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">EVO ID</div>
+                  <div class="setting-desc">Seu identificador único Evolution</div>
+                </div>
+                <div class="evo-id-copy-row">
+                  <span id="settings-evo-id" class="mono-text">—</span>
+                  <button class="btn-ghost-sm" onclick="copyEvoId()" type="button">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copiar
+                  </button>
+                </div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Status Online</div>
+                  <div class="setting-desc">Mostrar quando você está ativo</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="online-status-toggle" onchange="saveSetting('onlineStatus', this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Login automático</div>
+                  <div class="setting-desc">Permanecer conectado neste dispositivo</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="auto-login-toggle" onchange="saveSetting('autoLogin', this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Notificações push</div>
+                  <div class="setting-desc">Receber alertas de novas notificações</div>
+                </div>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="push-notif-toggle" onchange="saveSetting('pushNotif', this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Exportar Dados</div>
+                  <div class="setting-desc">Baixar todas as informações da sua conta em JSON</div>
+                </div>
+                <button class="btn-ghost-sm" onclick="exportAccountData()" type="button">
+                  <svg viewBox="0 0 24 24" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                  Exportar
+                </button>
+              </div>
+            </div>
+
+            <div class="settings-block">
+              <div class="settings-block-title">Segurança</div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Trocar Senha</div>
+                  <div class="setting-desc">Redefina usando sua pergunta de segurança</div>
+                </div>
+                <button class="btn-ghost-sm" onclick="openChangePassword()" type="button">Alterar</button>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Verificação de email</div>
+                  <div class="setting-desc">Conta verificada por email</div>
+                </div>
+                <div class="status-pill active">Ativo</div>
+              </div>
+
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Sessões ativas</div>
+                  <div class="setting-desc">Este dispositivo</div>
+                </div>
+                <button class="btn-ghost-sm danger" onclick="handleLogout()" type="button">Encerrar</button>
+              </div>
+            </div>
+
+            <div class="settings-block danger-zone">
+              <div class="settings-block-title">Zona de Perigo</div>
+              <div class="setting-row">
+                <div class="setting-info">
+                  <div class="setting-name">Excluir Conta</div>
+                  <div class="setting-desc">Esta ação é irreversível</div>
+                </div>
+                <button class="btn-ghost-sm danger" onclick="confirmDeleteAccount()" type="button">Excluir</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+  </div><!-- /app -->
+
+  <!-- MODAL EDIT PROFILE -->
+  <div id="modal-edit-profile" class="modal-overlay hidden" onclick="closeModal('modal-edit-profile')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Editar Perfil</h3>
+        <button class="modal-close" onclick="closeModal('modal-edit-profile')" type="button">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Nome Completo</label>
+          <input type="text" id="edit-name" placeholder="Seu nome completo" />
+        </div>
+        <div class="input-group">
+          <label>Bio <span class="label-hint">(máx. 120 caracteres)</span></label>
+          <div style="position:relative">
+            <textarea id="edit-bio" placeholder="Uma breve descrição sobre você..." maxlength="120" class="bio-textarea"></textarea>
+            <span class="bio-char-count" id="bio-char-count">0/120</span>
+          </div>
+        </div>
+        <div class="input-group">
+          <label>País</label>
+          <select id="edit-country">
+            <option value="">Selecione...</option>
+            <option value="BR">🇧🇷 Brasil</option>
+            <option value="US">🇺🇸 Estados Unidos</option>
+            <option value="PT">🇵🇹 Portugal</option>
+            <option value="AR">🇦🇷 Argentina</option>
+            <option value="FR">🇫🇷 França</option>
+            <option value="DE">🇩🇪 Alemanha</option>
+            <option value="JP">🇯🇵 Japão</option>
+            <option value="GB">🇬🇧 Reino Unido</option>
+            <option value="CA">🇨🇦 Canadá</option>
+            <option value="MX">🇲🇽 México</option>
+            <option value="OTHER">🌍 Outro</option>
+          </select>
+        </div>
+        <div id="edit-profile-error" class="error-msg hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-edit-profile')" type="button">Cancelar</button>
+        <button class="btn-primary" onclick="handleEditProfile()" type="button" id="edit-profile-btn">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRM LOGOUT -->
+  <div id="modal-confirm-logout" class="modal-overlay hidden" onclick="closeModal('modal-confirm-logout')">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Sair da conta</h3>
+        <button class="modal-close" onclick="closeModal('modal-confirm-logout')" type="button">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:14px;color:var(--text-2);line-height:1.6">Tem certeza que deseja encerrar a sessão atual? Você precisará fazer login novamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-confirm-logout')" type="button">Cancelar</button>
+        <button class="btn-primary" onclick="handleLogout()" type="button" style="background:var(--danger);color:#fff">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CHANGE PW -->
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Trocar Senha</h3>
+        <button class="modal-close" onclick="closeModal('modal-change-pw')" type="button">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label>Resposta da pergunta de segurança</label>
+          <input type="text" id="cpw-answer" placeholder="Sua resposta" />
+        </div>
+        <div class="input-group">
+          <label>Nova Senha</label>
+          <input type="password" id="cpw-new" placeholder="••••••••" />
+        </div>
+        <div class="input-group">
+          <label>Confirmar Nova Senha</label>
+          <input type="password" id="cpw-confirm" placeholder="••••••••" />
+        </div>
+        <div id="cpw-error" class="error-msg hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-ghost" onclick="closeModal('modal-change-pw')" type="button">Cancelar</button>
+        <button class="btn-primary" onclick="handleChangePassword()" type="button">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden">
+    <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
+    <span id="toast-msg"></span>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
