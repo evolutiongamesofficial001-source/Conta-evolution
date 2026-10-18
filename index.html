@@ -1,718 +1,786 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-theme="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>Evolution — Account</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#05070d">
+<title>EvoAccount</title>
+<style>
+:root{--bg:#05070d;--bg2:#0a0f1d;--card:#0f1526;--card2:#161f38;--line:#1f2b4a;--text:#f4f7ff;--muted:#8a96b8;--blue:#2f6bff;--danger:#ff4d6a;--ok:#2ecc8f;--r:18px;--fs:16px}
+[data-theme=light]{--bg:#f2f5ff;--bg2:#ffffff;--card:#ffffff;--card2:#eaf0ff;--line:#d7e0fa;--text:#070b16;--muted:#5a6788}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:var(--fs)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100dvh;line-height:1.4}
+body.noscroll{overflow:hidden}
+body.rm *{animation:none!important;transition:none!important}
+h1,h2,h3{margin:0}
+.muted{color:var(--muted)}.center{text-align:center}.grow{flex:1;min-width:0}
+small{display:block;color:var(--muted);font-size:.8rem}
+.ic{flex:none}
+button{font-family:inherit}
+/* layout */
+.page{max-width:760px;margin:0 auto;padding:14px 16px calc(100px + env(safe-area-inset-bottom))}
+.top{display:flex;align-items:center;justify-content:space-between;margin:6px 0 16px;gap:10px}
+.top h1{font-size:1.5rem}
+.brand{display:flex;align-items:center;gap:10px;font-size:1.25rem}
+.brand b span,.brand h1 span{color:var(--blue)}
+.logo{width:52px;height:52px;border-radius:16px;background:var(--blue);color:#fff;display:grid;place-items:center;box-shadow:0 8px 30px color-mix(in srgb,var(--blue) 45%,transparent)}
+.logo.sm{width:34px;height:34px;border-radius:11px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+body.compact .card{padding:11px;margin-bottom:9px}
+.tap{cursor:pointer}.tap:active{transform:scale(.985)}
+.sec{font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:20px 4px 8px}
+.sec.nm{margin:0 0 6px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid2 .card{margin-bottom:0}.grid2{margin-bottom:14px}
+.stat{text-align:center}.stat b{display:block;font-size:2rem;color:var(--blue)}.stat span{color:var(--muted);font-size:.85rem}
+/* buttons / inputs */
+.btn{background:var(--blue);color:#fff;border:0;border-radius:14px;padding:13px 18px;font-weight:700;font-size:1rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{filter:brightness(.9)}
+.btn.ghost{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.btn.danger{background:var(--danger)}
+.btn.sm{padding:8px 12px;font-size:.85rem;border-radius:12px}
+.btn.full{width:100%}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.ib{background:none;border:0;color:var(--text);cursor:pointer;padding:6px;display:grid;place-items:center}
+.fab{width:46px;height:46px;border-radius:50%;border:0;background:var(--blue);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 24px color-mix(in srgb,var(--blue) 50%,transparent)}
+input,textarea,select{width:100%;background:var(--bg2);color:var(--text);border:1px solid var(--line);border-radius:14px;padding:13px 14px;font-size:1rem;font-family:inherit;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 25%,transparent)}
+input[type=range]{padding:0;height:30px;accent-color:var(--blue);border:0;background:none}
+label.lbl{display:block;font-size:.82rem;color:var(--muted);margin:12px 2px 6px}
+.err{color:var(--danger);font-size:.88rem;min-height:1.2em;margin:8px 2px}
+.pw{position:relative}.pw input{padding-right:84px}
+.eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--blue);font-weight:700;cursor:pointer;padding:8px}
+/* auth */
+.auth{min-height:100dvh;display:grid;place-items:center;padding:20px;background:radial-gradient(900px 500px at 50% -10%,color-mix(in srgb,var(--blue) 28%,transparent),transparent)}
+.acard{width:100%;max-width:420px;background:var(--card);border:1px solid var(--line);border-radius:26px;padding:26px}
+.acard .brand{flex-direction:column;margin-bottom:18px}.acard h1{font-size:1.9rem}
+.seg{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:4px;gap:4px}
+.seg button{flex:1;background:none;border:0;color:var(--muted);padding:9px 6px;border-radius:10px;font-weight:700;cursor:pointer;font-size:.9rem}
+.seg button.on{background:var(--blue);color:#fff}
+.tabs{margin-bottom:6px}
+/* avatar & hero */
+.av{border-radius:50%;object-fit:cover;background:linear-gradient(135deg,var(--blue),#0a2a8a);color:#fff;display:inline-grid;place-items:center;font-weight:800;flex:none}
+.hero{text-align:center;padding:26px 16px;background:linear-gradient(180deg,color-mix(in srgb,var(--blue) 14%,var(--card)),var(--card))}
+.avbtn{position:relative;background:none;border:0;padding:0;cursor:pointer;margin-bottom:10px}
+.avbtn .av{border:3px solid var(--blue)}
+.cam{position:absolute;right:2px;bottom:6px;width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;border:3px solid var(--card)}
+.hero h2{font-size:1.5rem}
+.idrow{display:flex;align-items:center;justify-content:center;gap:10px;margin:10px 0;flex-wrap:wrap}
+code{background:var(--bg2);border:1px solid var(--line);padding:8px 12px;border-radius:12px;font-size:1.05rem;font-weight:700;letter-spacing:.06em;color:var(--blue);font-family:ui-monospace,Menlo,Consolas,monospace}
+.bio{margin:6px 0 0}
+/* rows */
+.row{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.row b{display:block;font-size:.95rem}
+.row.tap:active{background:var(--card2)}
+.ri{width:38px;height:38px;border-radius:12px;background:var(--card2);color:var(--blue);display:grid;place-items:center;flex:none}
+.val{color:var(--muted);font-size:.9rem;text-align:right;word-break:break-all}
+.pill{font-size:.72rem;font-weight:800;padding:3px 9px;border-radius:99px;background:color-mix(in srgb,var(--ok) 20%,transparent);color:var(--ok)}
+.sw{position:relative;display:inline-block;width:50px;height:30px;flex:none}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw i{position:absolute;inset:0;background:var(--card2);border:1px solid var(--line);border-radius:99px;transition:.2s}
+.sw i:before{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:var(--muted);transition:.2s}
+.sw input:checked+i{background:var(--blue);border-color:var(--blue)}
+.sw input:checked+i:before{transform:translateX(20px);background:#fff}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.swatches button{width:34px;height:34px;border-radius:50%;border:3px solid transparent;cursor:pointer}
+.swatches button.on{border-color:var(--text)}
+.mrow{display:flex;gap:10px;margin-top:16px}.mrow .btn{flex:1}
+.empty{text-align:center;color:var(--muted);padding:28px 16px}
+/* nav */
+.navbar{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 45%);z-index:20;pointer-events:none}
+.navbar .in{pointer-events:auto;display:flex;gap:4px;width:100%;max-width:560px;background:var(--card);border:1px solid var(--line);border-radius:24px;padding:6px;box-shadow:0 10px 40px rgba(0,0,0,.35)}
+.navbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;color:var(--muted);font-weight:700;font-size:.68rem;padding:8px 2px;border-radius:18px;cursor:pointer;position:relative}
+.navbar button.on{color:#fff;background:var(--blue)}
+.dot{position:absolute;top:2px;right:18%;background:var(--danger);color:#fff;font-size:.65rem;min-width:18px;height:18px;border-radius:9px;display:grid;place-items:center;padding:0 4px}
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:50;background:rgba(2,4,10,.72);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center}
+.overlay.hidden{display:none}
+.sheet{width:100%;max-width:460px;max-height:92dvh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:26px 26px 0 0;padding:22px 20px calc(22px + env(safe-area-inset-bottom));animation:up .25s ease}
+.sheet h2{margin-bottom:6px}
+@media(min-width:700px){.overlay{align-items:center}.sheet{border-radius:26px}}
+@keyframes up{from{transform:translateY(30px);opacity:0}}
+#loader{align-items:center;background:var(--bg);z-index:80}
+.ldbox{width:100%;max-width:380px;padding:28px;text-align:center}
+.ldbox .logo{margin:0 auto 18px;width:72px;height:72px;border-radius:22px;animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.07)}}
+#steps{list-style:none;padding:0;margin:22px 0;text-align:left}
+#steps li{display:flex;align-items:center;gap:12px;padding:11px 4px;color:var(--muted);transition:.3s}
+#steps li.act{color:var(--text)}#steps li.done{color:var(--ok)}
+.sp{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+li.act .sp{border-color:var(--blue);border-top-color:transparent;animation:spin .8s linear infinite}
+li.done .sp{background:var(--ok);border-color:var(--ok);color:#fff}
+li.done .sp:after{content:"✓";font-size:.8rem;font-weight:800}
+@keyframes spin{to{transform:rotate(360deg)}}
+.prog{height:6px;background:var(--card2);border-radius:9px;overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--blue);transition:width .5s}
+#toast{position:fixed;top:calc(12px + env(safe-area-inset-top));left:0;right:0;z-index:100;display:flex;flex-direction:column;align-items:center;gap:8px;pointer-events:none}
+.t{background:var(--card2);color:var(--text);border:1px solid var(--line);border-left:4px solid var(--blue);padding:11px 16px;border-radius:14px;max-width:90vw;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.4);animation:up .25s}
+.t.err{border-left-color:var(--danger)}.t.ok{border-left-color:var(--ok)}.t.out{opacity:0;transition:.4s}
+/* crop */
+.cropwrap{display:grid;place-items:center;margin:14px 0}
+#cv{width:240px;height:240px;border-radius:50%;border:3px solid var(--blue);touch-action:none;cursor:grab;background:#000}
+/* friends */
+.frow{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:10px}
+.frow b{display:block}
+.acts{display:flex;gap:8px}
+/* chat */
+.conv{position:fixed;inset:0;z-index:40;background:var(--bg);display:flex;justify-content:center}
+.cwrap{width:100%;max-width:760px;display:flex;flex-direction:column;height:100dvh;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.chead{display:flex;align-items:center;gap:10px;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top));background:var(--card);border-bottom:1px solid var(--line)}
+.warn{font-size:.78rem;background:color-mix(in srgb,var(--blue) 14%,var(--bg));color:var(--muted);padding:8px 14px;text-align:center}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px}
+.b{max-width:78%;padding:9px 13px;border-radius:18px;display:flex;flex-direction:column;gap:2px}
+.b span{white-space:pre-wrap;word-break:break-word}
+.b time{font-size:.66rem;opacity:.65;align-self:flex-end}
+.b.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+.b.th{align-self:flex-start;background:var(--card);border:1px solid var(--line);border-bottom-left-radius:5px}
+.dsep{align-self:center;font-size:.72rem;color:var(--muted);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:3px 12px;margin:8px 0}
+.comp{display:flex;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--card);border-top:1px solid var(--line);align-items:flex-end}
+.comp textarea{resize:none;max-height:120px;border-radius:20px;padding:11px 15px}
+.comp .btn.send{width:48px;height:48px;padding:0;border-radius:50%;flex:none}
+/* store */
+.ext{display:flex;gap:14px;align-items:flex-start}
+.exi{width:56px;height:56px;border-radius:16px;background:var(--blue);color:#fff;display:grid;place-items:center;flex:none}
+.ext .acts{margin-top:12px}
+.ext .acts .btn{flex:1}
+.meta{font-size:.78rem;color:var(--muted);margin:2px 0 6px}
+.clockw{text-align:center}.clockw #clk{font-size:2.6rem;font-weight:800;letter-spacing:.04em;color:var(--blue)}
+/* neon extension */
+body.neon .card,body.neon .navbar .in,body.neon .frow{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue),0 0 22px color-mix(in srgb,var(--blue) 40%,transparent)}
+body.neon .btn:not(.ghost){box-shadow:0 0 18px var(--blue)}
+body.neon .av{box-shadow:0 0 26px var(--blue)}
+body.neon code{text-shadow:0 0 10px var(--blue)}
+</style>
 </head>
 <body>
-
-  <!-- SPLASH -->
-  <div id="splash" class="splash">
-    <div class="splash-logo">
-      <div class="splash-wordmark">EVO</div>
-      <div class="splash-bar"></div>
-    </div>
-  </div>
-
-  <!-- APP -->
-  <div id="app" class="app hidden">
-
-    <!-- ══ AUTH SCREEN ══ -->
-    <div id="auth-screen" class="screen active">
-      <div class="auth-bg">
-        <div class="grid-lines"></div>
-        <div class="glow-orb orb-1"></div>
-        <div class="glow-orb orb-2"></div>
-      </div>
-
-      <div class="auth-container">
-        <div class="auth-brand">
-          <span class="brand-name">Evolution</span>
-          <span class="brand-tag">Account System</span>
-        </div>
-
-        <!-- LOGIN -->
-        <div id="login-form" class="auth-card">
-          <h2 class="form-title">Entrar</h2>
-          <p class="form-sub">Bem-vindo de volta.</p>
-
-          <div class="input-group">
-            <label>Email ou Username</label>
-            <input type="text" id="login-identifier" placeholder="voce@email.com" autocomplete="off" autocapitalize="none" />
-          </div>
-          <div class="input-group">
-            <label>Senha</label>
-            <div class="input-pw-wrap">
-              <input type="password" id="login-password" placeholder="••••••••" />
-              <button class="pw-toggle" onclick="togglePw('login-password', this)" type="button">
-                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <button class="btn-link forgot-link" onclick="showScreen('forgot-form')" type="button">Esqueci minha senha</button>
-
-          <button class="btn-primary" onclick="handleLogin()" type="button" id="login-btn">
-            <span>Acessar</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-
-          <p class="auth-switch">Não tem conta? <button class="btn-link" onclick="showScreen('register-form')" type="button">Criar agora</button></p>
-          <div id="login-error" class="error-msg hidden"></div>
-        </div>
-
-        <!-- REGISTER -->
-        <div id="register-form" class="auth-card hidden">
-          <h2 class="form-title">Criar Conta</h2>
-          <p class="form-sub">Junte-se à Evolution.</p>
-
-          <div class="form-grid-2">
-            <div class="input-group">
-              <label>Nome Completo</label>
-              <input type="text" id="reg-name" placeholder="Seu nome" autocomplete="name" />
-            </div>
-            <div class="input-group">
-              <label>Username</label>
-              <div class="input-prefix-wrap">
-                <span class="prefix">@</span>
-                <input type="text" id="reg-username" placeholder="username" autocapitalize="none" />
-              </div>
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label>Email</label>
-            <input type="email" id="reg-email" placeholder="voce@email.com" autocomplete="email" />
-          </div>
-
-          <div class="form-grid-2">
-            <div class="input-group">
-              <label>Senha</label>
-              <div class="input-pw-wrap">
-                <input type="password" id="reg-password" placeholder="••••••••" autocomplete="new-password" />
-                <button class="pw-toggle" onclick="togglePw('reg-password', this)" type="button">
-                  <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                </button>
-              </div>
-            </div>
-            <div class="input-group">
-              <label>Data de Nascimento</label>
-              <input type="date" id="reg-dob" />
-            </div>
-          </div>
-
-          <div class="input-group">
-            <label>País</label>
-            <select id="reg-country">
-              <option value="">Selecione...</option>
-              <option value="BR">🇧🇷 Brasil</option>
-              <option value="US">🇺🇸 Estados Unidos</option>
-              <option value="PT">🇵🇹 Portugal</option>
-              <option value="AR">🇦🇷 Argentina</option>
-              <option value="FR">🇫🇷 França</option>
-              <option value="DE">🇩🇪 Alemanha</option>
-              <option value="JP">🇯🇵 Japão</option>
-              <option value="GB">🇬🇧 Reino Unido</option>
-              <option value="CA">🇨🇦 Canadá</option>
-              <option value="MX">🇲🇽 México</option>
-              <option value="OTHER">🌍 Outro</option>
-            </select>
-          </div>
-
-          <div class="input-group">
-            <label>Pergunta de segurança <span class="label-hint">(usada na recuperação de senha)</span></label>
-            <select id="reg-sec-question">
-              <option value="">Selecione uma pergunta...</option>
-              <option value="pet">Qual o nome do seu primeiro animal de estimação?</option>
-              <option value="city">Em qual cidade você nasceu?</option>
-              <option value="school">Qual o nome da sua primeira escola?</option>
-              <option value="mother">Qual o nome do meio da sua mãe?</option>
-              <option value="car">Qual foi o modelo do seu primeiro carro?</option>
-            </select>
-            <input type="text" id="reg-sec-answer" placeholder="Sua resposta secreta" style="margin-top:8px" />
-          </div>
-
-          <button class="btn-primary" onclick="handleRegister()" type="button" id="register-btn">
-            <span>Continuar</span>
-            <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-
-          <p class="auth-switch">Já tem conta? <button class="btn-link" onclick="showScreen('login-form')" type="button">Entrar</button></p>
-          <div id="register-error" class="error-msg hidden"></div>
-        </div>
-
-        <!-- EMAIL VERIFICATION — link via email -->
-        <div id="verify-form" class="auth-card hidden">
-          <div class="verify-icon">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          </div>
-          <h2 class="form-title">Verifique seu Email</h2>
-          <p class="form-sub">Enviamos um link de verificação para <strong id="verify-email-display"></strong></p>
-
-          <div class="verify-steps">
-            <div class="verify-step">
-              <div class="step-num">1</div>
-              <div class="step-text">Abra sua caixa de entrada</div>
-            </div>
-            <div class="verify-step">
-              <div class="step-num">2</div>
-              <div class="step-text">Clique no link <strong>"Verificar minha conta"</strong></div>
-            </div>
-            <div class="verify-step">
-              <div class="step-num">3</div>
-              <div class="step-text">Volte aqui e clique em <strong>Já verifiquei</strong></div>
-            </div>
-          </div>
-
-          <button class="btn-primary" onclick="handleVerifyEmail()" type="button" id="verify-btn">
-            <span>Já verifiquei</span>
-            <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
-          </button>
-
-          <button class="btn-secondary" onclick="resendVerification()" type="button" style="margin-top:10px">
-            Reenviar email
-          </button>
-
-          <div id="verify-error" class="error-msg hidden"></div>
-          <div id="verify-success" class="success-msg hidden"></div>
-        </div>
-
-        <!-- FORGOT PASSWORD -->
-        <div id="forgot-form" class="auth-card hidden">
-          <h2 class="form-title">Recuperar Acesso</h2>
-          <p class="form-sub">Responda sua pergunta de segurança.</p>
-
-          <div class="input-group">
-            <label>Email da conta</label>
-            <input type="email" id="forgot-email" placeholder="voce@email.com" />
-          </div>
-
-          <button class="btn-secondary" onclick="loadSecurityQuestion()" type="button" style="margin-bottom:16px">Buscar pergunta</button>
-
-          <div id="sec-question-block" class="hidden">
-            <div class="input-group">
-              <label id="sec-question-label">—</label>
-              <input type="text" id="forgot-answer" placeholder="Sua resposta" />
-            </div>
-            <div class="input-group">
-              <label>Nova Senha</label>
-              <input type="password" id="forgot-new-pw" placeholder="••••••••" />
-            </div>
-            <button class="btn-primary" onclick="handleResetPassword()" type="button">
-              <span>Redefinir Senha</span>
-              <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </button>
-          </div>
-
-          <button class="btn-link" onclick="showScreen('login-form')" type="button" style="margin-top:16px">← Voltar</button>
-          <div id="forgot-error" class="error-msg hidden"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ══ DASHBOARD ══ -->
-    <div id="dashboard-screen" class="screen hidden">
-
-      <!-- SIDEBAR (desktop) -->
-      <aside class="sidebar" id="sidebar">
-        <div class="sidebar-brand">
-          <div class="brand-dot"></div>
-          <span>EVO</span>
-        </div>
-
-        <nav class="sidebar-nav">
-          <button class="nav-item active" data-tab="profile" onclick="switchTab('profile', this)" type="button">
-            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            <span>Perfil</span>
-          </button>
-          <button class="nav-item" data-tab="activity" onclick="switchTab('activity', this)" type="button">
-            <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
-            <span>Atividade</span>
-          </button>
-          <button class="nav-item" data-tab="notifications" onclick="switchTab('notifications', this)" type="button">
-            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span>Notificações</span>
-            <div class="notif-badge" id="notif-badge" style="display:none">0</div>
-          </button>
-          <button class="nav-item" data-tab="settings" onclick="switchTab('settings', this)" type="button">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span>Configurações</span>
-          </button>
-        </nav>
-
-        <button class="nav-item nav-logout" onclick="confirmLogout()" type="button">
-          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          <span>Sair</span>
-        </button>
-      </aside>
-
-      <!-- BOTTOM NAV (mobile) -->
-      <nav class="bottom-nav" id="bottom-nav">
-        <button class="bnav-item active" data-tab="profile" onclick="switchTab('profile', this)" type="button">
-          <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Perfil</span>
-        </button>
-        <button class="bnav-item" data-tab="activity" onclick="switchTab('activity', this)" type="button">
-          <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
-          <span>Atividade</span>
-        </button>
-        <button class="bnav-item" data-tab="notifications" onclick="switchTab('notifications', this)" type="button">
-          <div class="bnav-icon-wrap">
-            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <div class="bnav-badge" id="bnav-badge" style="display:none"></div>
-          </div>
-          <span>Notificações</span>
-        </button>
-        <button class="bnav-item" data-tab="settings" onclick="switchTab('settings', this)" type="button">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>Config.</span>
-        </button>
-        <button class="bnav-item bnav-logout" onclick="confirmLogout()" type="button">
-          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-          <span>Sair</span>
-        </button>
-      </nav>
-
-      <!-- MAIN CONTENT -->
-      <main class="main-content">
-
-        <!-- PROFILE TAB -->
-        <section id="tab-profile" class="tab-section active">
-          <div class="tab-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <div>
-              <h1>Meu Perfil</h1>
-              <p class="tab-sub">Gerencie sua identidade Evolution</p>
-            </div>
-            <button class="btn-ghost-sm" onclick="openEditProfile()" type="button" style="flex-shrink:0;margin-top:8px">
-              <svg viewBox="0 0 24 24" width="13" height="13"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              Editar Perfil
-            </button>
-          </div>
-
-          <!-- Profile completion bar -->
-          <div class="profile-completion" id="profile-completion">
-            <div class="completion-header">
-              <span class="completion-label">Perfil completo</span>
-              <span class="completion-pct" id="completion-pct">0%</span>
-            </div>
-            <div class="completion-bar"><div class="completion-fill" id="completion-fill"></div></div>
-            <div class="completion-tips" id="completion-tips"></div>
-          </div>
-
-          <div class="profile-hero">
-            <div class="avatar-zone">
-              <div class="avatar-ring">
-                <div class="avatar-wrap" id="avatar-display">
-                  <img id="avatar-img" src="" alt="Avatar" class="hidden" />
-                  <div id="avatar-initials" class="avatar-initials"></div>
-                </div>
-              </div>
-              <button class="avatar-edit-btn" onclick="document.getElementById('avatar-input').click()" type="button">
-                <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-              </button>
-              <input type="file" id="avatar-input" accept="image/*" class="hidden" onchange="handleAvatarUpload(event)" />
-            </div>
-            <div class="profile-info-hero">
-              <h2 id="profile-display-name">—</h2>
-              <p id="profile-display-username" class="username-tag"></p>
-              <p id="profile-display-bio" class="profile-bio-text"></p>
-              <div class="profile-badges" id="profile-badges"></div>
-              <div class="evo-id-pill" id="evo-id-pill">
-                <span class="evo-id-label">EVO ID</span>
-                <span id="evo-id-value">—</span>
-                <button onclick="copyEvoId()" class="copy-mini" type="button">
-                  <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-cards">
-            <div class="info-card">
-              <div class="info-card-title">Informações Pessoais</div>
-              <div class="info-row">
-                <span class="info-label">Nome</span>
-                <span class="info-value" id="info-name">—</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Email</span>
-                <span class="info-value" id="info-email">—</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">País</span>
-                <span class="info-value" id="info-country">—</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Nascimento</span>
-                <span class="info-value" id="info-dob">—</span>
-              </div>
-              <div class="info-row">
-                <span class="info-label">Membro desde</span>
-                <span class="info-value" id="info-joined">—</span>
-              </div>
-            </div>
-
-            <div class="info-card stats-card">
-              <div class="info-card-title">Conta Evolution</div>
-              <div class="stat-grid">
-                <div class="stat-item">
-                  <div class="stat-num" id="stat-evo-id">—</div>
-                  <div class="stat-label">EVO ID</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-num" id="stat-notifs">0</div>
-                  <div class="stat-label">Notificações</div>
-                </div>
-                <div class="stat-item">
-                  <div class="stat-num" id="stat-days">0</div>
-                  <div class="stat-label">Dias ativo</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ACTIVITY TAB -->
-        <section id="tab-activity" class="tab-section hidden">
-          <div class="tab-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
-            <div>
-              <h1>Atividade</h1>
-              <p class="tab-sub">Histórico de acessos e ações da conta</p>
-            </div>
-            <button class="btn-ghost-sm" onclick="clearActivityLog()" type="button" style="flex-shrink:0;margin-top:8px">
-              <svg viewBox="0 0 24 24" width="13" height="13"><polyline points="3,6 5,6 21,6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
-              Limpar
-            </button>
-          </div>
-
-          <!-- Session info card -->
-          <div class="activity-session-card" id="activity-session-card">
-            <div class="session-dot"></div>
-            <div style="flex:1;min-width:0">
-              <div class="session-title">Sessão Atual</div>
-              <div class="session-details" id="session-details">Calculando...</div>
-            </div>
-            <div class="session-status">Online</div>
-          </div>
-
-          <!-- Stats row -->
-          <div class="activity-stats-row" id="activity-stats-row">
-            <div class="activity-stat">
-              <div class="activity-stat-num" id="astat-logins">0</div>
-              <div class="activity-stat-label">Logins</div>
-            </div>
-            <div class="activity-stat">
-              <div class="activity-stat-num" id="astat-actions">0</div>
-              <div class="activity-stat-label">Ações</div>
-            </div>
-            <div class="activity-stat">
-              <div class="activity-stat-num" id="astat-days">0</div>
-              <div class="activity-stat-label">Dias</div>
-            </div>
-          </div>
-
-          <div id="activity-log" class="activity-log">
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24"><polyline points="22,12 18,12 15,21 9,3 6,12 2,12"/></svg>
-              <p>Nenhuma atividade registrada</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- NOTIFICATIONS TAB -->
-        <section id="tab-notifications" class="tab-section hidden">
-          <div class="tab-header">
-            <h1>Notificações</h1>
-            <p class="tab-sub">Suas mensagens e atualizações</p>
-          </div>
-
-          <div class="notif-toolbar">
-            <button class="btn-ghost-sm" onclick="markAllRead()" type="button">Marcar todas como lidas</button>
-            <span id="notif-count-label" class="notif-count-text">0 notificações</span>
-          </div>
-
-          <div id="notif-list" class="notif-list">
-            <div class="empty-state">
-              <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-              <p>Nenhuma notificação ainda</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- SETTINGS TAB -->
-        <section id="tab-settings" class="tab-section hidden">
-          <div class="tab-header">
-            <h1>Configurações</h1>
-            <p class="tab-sub">Personalize sua experiência</p>
-          </div>
-
-          <div class="settings-sections">
-
-            <div class="settings-block">
-              <div class="settings-block-title">Aparência</div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Tema</div>
-                  <div class="setting-desc">Alterne entre modo escuro e claro</div>
-                </div>
-                <div class="theme-toggle-wrap">
-                  <button class="theme-btn" id="theme-dark-btn" onclick="setTheme('dark')" type="button">
-                    <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    Escuro
-                  </button>
-                  <button class="theme-btn" id="theme-light-btn" onclick="setTheme('light')" type="button">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                    Claro
-                  </button>
-                </div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Modo Compacto</div>
-                  <div class="setting-desc">Reduz espaçamentos para telas menores</div>
-                </div>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="compact-mode-toggle" onchange="toggleCompactMode(this.checked)" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Idioma</div>
-                  <div class="setting-desc">Idioma da interface</div>
-                </div>
-                <select class="setting-select" id="language-select" onchange="saveSetting('language', this.value)">
-                  <option value="pt-BR">🇧🇷 Português (BR)</option>
-                  <option value="en">🇺🇸 English</option>
-                  <option value="es">🇪🇸 Español</option>
-                  <option value="fr">🇫🇷 Français</option>
-                  <option value="de">🇩🇪 Deutsch</option>
-                  <option value="ja">🇯🇵 日本語</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="settings-block">
-              <div class="settings-block-title">Conta</div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">EVO ID</div>
-                  <div class="setting-desc">Seu identificador único Evolution</div>
-                </div>
-                <div class="evo-id-copy-row">
-                  <span id="settings-evo-id" class="mono-text">—</span>
-                  <button class="btn-ghost-sm" onclick="copyEvoId()" type="button">
-                    <svg viewBox="0 0 24 24" width="14" height="14"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                    Copiar
-                  </button>
-                </div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Status Online</div>
-                  <div class="setting-desc">Mostrar quando você está ativo</div>
-                </div>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="online-status-toggle" onchange="saveSetting('onlineStatus', this.checked)" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Login automático</div>
-                  <div class="setting-desc">Permanecer conectado neste dispositivo</div>
-                </div>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="auto-login-toggle" onchange="saveSetting('autoLogin', this.checked)" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Notificações push</div>
-                  <div class="setting-desc">Receber alertas de novas notificações</div>
-                </div>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="push-notif-toggle" onchange="saveSetting('pushNotif', this.checked)" />
-                  <span class="toggle-slider"></span>
-                </label>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Exportar Dados</div>
-                  <div class="setting-desc">Baixar todas as informações da sua conta em JSON</div>
-                </div>
-                <button class="btn-ghost-sm" onclick="exportAccountData()" type="button">
-                  <svg viewBox="0 0 24 24" width="13" height="13"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                  Exportar
-                </button>
-              </div>
-            </div>
-
-            <div class="settings-block">
-              <div class="settings-block-title">Segurança</div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Trocar Senha</div>
-                  <div class="setting-desc">Redefina usando sua pergunta de segurança</div>
-                </div>
-                <button class="btn-ghost-sm" onclick="openChangePassword()" type="button">Alterar</button>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Verificação de email</div>
-                  <div class="setting-desc">Conta verificada por email</div>
-                </div>
-                <div class="status-pill active">Ativo</div>
-              </div>
-
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Sessões ativas</div>
-                  <div class="setting-desc">Este dispositivo</div>
-                </div>
-                <button class="btn-ghost-sm danger" onclick="handleLogout()" type="button">Encerrar</button>
-              </div>
-            </div>
-
-            <div class="settings-block danger-zone">
-              <div class="settings-block-title">Zona de Perigo</div>
-              <div class="setting-row">
-                <div class="setting-info">
-                  <div class="setting-name">Excluir Conta</div>
-                  <div class="setting-desc">Esta ação é irreversível</div>
-                </div>
-                <button class="btn-ghost-sm danger" onclick="confirmDeleteAccount()" type="button">Excluir</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      </main>
-    </div>
-
-  </div><!-- /app -->
-
-  <!-- MODAL EDIT PROFILE -->
-  <div id="modal-edit-profile" class="modal-overlay hidden" onclick="closeModal('modal-edit-profile')">
-    <div class="modal-box" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Editar Perfil</h3>
-        <button class="modal-close" onclick="closeModal('modal-edit-profile')" type="button">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group">
-          <label>Nome Completo</label>
-          <input type="text" id="edit-name" placeholder="Seu nome completo" />
-        </div>
-        <div class="input-group">
-          <label>Bio <span class="label-hint">(máx. 120 caracteres)</span></label>
-          <div style="position:relative">
-            <textarea id="edit-bio" placeholder="Uma breve descrição sobre você..." maxlength="120" class="bio-textarea"></textarea>
-            <span class="bio-char-count" id="bio-char-count">0/120</span>
-          </div>
-        </div>
-        <div class="input-group">
-          <label>País</label>
-          <select id="edit-country">
-            <option value="">Selecione...</option>
-            <option value="BR">🇧🇷 Brasil</option>
-            <option value="US">🇺🇸 Estados Unidos</option>
-            <option value="PT">🇵🇹 Portugal</option>
-            <option value="AR">🇦🇷 Argentina</option>
-            <option value="FR">🇫🇷 França</option>
-            <option value="DE">🇩🇪 Alemanha</option>
-            <option value="JP">🇯🇵 Japão</option>
-            <option value="GB">🇬🇧 Reino Unido</option>
-            <option value="CA">🇨🇦 Canadá</option>
-            <option value="MX">🇲🇽 México</option>
-            <option value="OTHER">🌍 Outro</option>
-          </select>
-        </div>
-        <div id="edit-profile-error" class="error-msg hidden"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-ghost" onclick="closeModal('modal-edit-profile')" type="button">Cancelar</button>
-        <button class="btn-primary" onclick="handleEditProfile()" type="button" id="edit-profile-btn">Salvar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL CONFIRM LOGOUT -->
-  <div id="modal-confirm-logout" class="modal-overlay hidden" onclick="closeModal('modal-confirm-logout')">
-    <div class="modal-box" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Sair da conta</h3>
-        <button class="modal-close" onclick="closeModal('modal-confirm-logout')" type="button">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p style="font-size:14px;color:var(--text-2);line-height:1.6">Tem certeza que deseja encerrar a sessão atual? Você precisará fazer login novamente.</p>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-ghost" onclick="closeModal('modal-confirm-logout')" type="button">Cancelar</button>
-        <button class="btn-primary" onclick="handleLogout()" type="button" style="background:var(--danger);color:#fff">Sair</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL CHANGE PW -->
-    <div class="modal-box" onclick="event.stopPropagation()">
-      <div class="modal-header">
-        <h3>Trocar Senha</h3>
-        <button class="modal-close" onclick="closeModal('modal-change-pw')" type="button">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="input-group">
-          <label>Resposta da pergunta de segurança</label>
-          <input type="text" id="cpw-answer" placeholder="Sua resposta" />
-        </div>
-        <div class="input-group">
-          <label>Nova Senha</label>
-          <input type="password" id="cpw-new" placeholder="••••••••" />
-        </div>
-        <div class="input-group">
-          <label>Confirmar Nova Senha</label>
-          <input type="password" id="cpw-confirm" placeholder="••••••••" />
-        </div>
-        <div id="cpw-error" class="error-msg hidden"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn-ghost" onclick="closeModal('modal-change-pw')" type="button">Cancelar</button>
-        <button class="btn-primary" onclick="handleChangePassword()" type="button">Salvar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast -->
-  <div id="toast" class="toast hidden">
-    <svg viewBox="0 0 24 24"><polyline points="20,6 9,17 4,12"/></svg>
-    <span id="toast-msg"></span>
-  </div>
-
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <script src="app.js"></script>
+<div id="app"></div>
+<div id="toast"></div>
+<div id="loader" class="overlay hidden"><div class="ldbox">
+  <div class="logo" id="ldlogo"></div>
+  <h2>Criando sua conta</h2><p class="muted" style="margin:6px 0 0">Isso leva só alguns segundos</p>
+  <ul id="steps"></ul>
+  <div class="prog"><i id="pb"></i></div>
+</div></div>
+
+<script>
+'use strict';
+/* ============ CONFIG ============ */
+const DBS=[
+'https://gjwi-d9db7-default-rtdb.firebaseio.com',
+'https://king-e925d-default-rtdb.firebaseio.com',
+'https://qweryyh-895cd-default-rtdb.firebaseio.com',
+'https://ytrd-a59f8-default-rtdb.asia-southeast1.firebasedatabase.app',
+'https://ttyg-dba52-default-rtdb.firebaseio.com'];
+const TIMEOUT=9000;
+const DEF={theme:'dark',accent:'#2f6bff',fontSize:16,sound:true,reduceMotion:false,compact:false,notifyReq:true,allowRequests:true,hideEmail:false,enterToSend:true,showTime:true,pollSec:4};
+const EXTS=[
+ {id:'neon',name:'Evo Neon',icon:'bolt',ver:'1.0.0',size:'42 KB',desc:'Brilho neon azul nos cartões, botões, avatar e barra de navegação.'},
+ {id:'clock',name:'Evo Relógio',icon:'clock',ver:'1.2.0',size:'18 KB',desc:'Adiciona um relógio e a data de hoje no seu Dashboard.'}];
+const ICONS={
+home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+chat:'<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8z"/>',
+store:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+gear:'<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+copy:'<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+camera:'<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>',
+send:'<line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>',
+back:'<polyline points="15 18 9 12 15 6"/>',
+check:'<polyline points="20 6 9 17 4 12"/>',
+x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+lock:'<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+bolt:'<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+clock:'<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+user:'<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>'};
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[n]||''}</svg>`;
+
+/* ============ UTIL ============ */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key=s=>s.replace(/[.#$\[\]\/%]/g,c=>'%'+c.charCodeAt(0).toString(16).padStart(2,'0'));
+const isId=s=>/^EV-\d{8}$/.test(s);
+const cid=(a,b)=>[a,b].sort().join('_');
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const hex=u8=>[...u8].map(b=>b.toString(16).padStart(2,'0')).join('');
+const rnd=n=>{const a=new Uint8Array(n);crypto.getRandomValues(a);return hex(a)};
+const hhmm=d=>d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+function genEvoId(){const a=new Uint32Array(1);crypto.getRandomValues(a);return 'EV-'+String(10000000+a[0]%90000000)}
+function toast(m,t){const el=document.createElement('div');el.className='t '+(t||'');el.textContent=m;$('#toast').appendChild(el);setTimeout(()=>el.classList.add('out'),2600);setTimeout(()=>el.remove(),3100)}
+let ac;function beep(){if(!ME||!ME.settings.sound)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.frequency.value=880;g.gain.setValueAtTime(.001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.2,ac.currentTime+.02);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.25);o.start();o.stop(ac.currentTime+.26)}catch(e){}}
+
+/* SHA-256 (usa crypto.subtle quando disponível; fallback em JS puro) */
+function sha256js(bytes){
+ const K=[],H=[];let c=0;
+ for(let n=2;c<64;n++){let p=true;for(let i=2;i*i<=n;i++)if(n%i===0){p=false;break}
+  if(p){if(c<8)H[c]=(Math.pow(n,.5)*4294967296)|0;K[c]=(Math.pow(n,1/3)*4294967296)|0;c++}}
+ const l=bytes.length,total=(((l+8)>>6)+1)*16,w=new Array(total).fill(0);
+ for(let i=0;i<l;i++)w[i>>2]|=bytes[i]<<(24-(i%4)*8);
+ w[l>>2]|=0x80<<(24-(l%4)*8);w[total-1]=l*8;
+ let h=H.slice(0,8);
+ for(let o=0;o<total;o+=16){
+  const W=w.slice(o,o+16),old=h.slice(0);
+  for(let i=0;i<64;i++){
+   if(i>=16){const a=W[i-15],b=W[i-2];
+    const s0=((a>>>7)|(a<<25))^((a>>>18)|(a<<14))^(a>>>3);
+    const s1=((b>>>17)|(b<<15))^((b>>>19)|(b<<13))^(b>>>10);
+    W[i]=(W[i-16]+s0+W[i-7]+s1)|0}
+   const [a,b,c2,d,e,f,g,hh]=h;
+   const S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7));
+   const ch=(e&f)^(~e&g),t1=(hh+S1+ch+K[i]+W[i])|0;
+   const S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10));
+   const maj=(a&b)^(a&c2)^(b&c2),t2=(S0+maj)|0;
+   h=[(t1+t2)|0,a,b,c2,(d+t1)|0,e,f,g]}
+  for(let i=0;i<8;i++)h[i]=(h[i]+old[i])|0}
+ return h.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
+}
+//END_SHA
+async function sha256(str){
+ const data=new TextEncoder().encode(str);
+ if(window.crypto&&crypto.subtle){try{return hex(new Uint8Array(await crypto.subtle.digest('SHA-256',data)))}catch(e){}}
+ return sha256js(data);
+}
+
+/* ============ FIREBASE (REST, 5 bancos) ============ */
+let primary=0;
+async function req(base,path,method,body){
+ const c=new AbortController(),t=setTimeout(()=>c.abort(),TIMEOUT);
+ try{
+  const r=await fetch(base+'/'+path+'.json',{method,body:body===undefined?undefined:JSON.stringify(body),signal:c.signal});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  return await r.json();
+ }finally{clearTimeout(t)}
+}
+const NOCONN='Sem conexão com os servidores Evo. Tente novamente.';
+async function dbGet(path,any){
+ if(any){
+  const rs=await Promise.allSettled(DBS.map(b=>req(b,path,'GET')));
+  const ok=rs.filter(r=>r.status==='fulfilled');
+  if(!ok.length)throw new Error(NOCONN);
+  const f=ok.find(r=>r.value!==null);return f?f.value:null;
+ }
+ for(let k=0;k<DBS.length;k++){const i=(k+primary)%DBS.length;
+  try{const v=await req(DBS[i],path,'GET');primary=i;return v}catch(e){}}
+ throw new Error(NOCONN);
+}
+function dbWrite(path,method,body){ /* grava nos 5; conclui quando o primeiro confirmar */
+ return new Promise((res,rej)=>{let fails=0;
+  DBS.forEach((b,i)=>req(b,path,method,body).then(()=>{primary=i;res()}).catch(()=>{if(++fails===DBS.length)rej(new Error(NOCONN))}))});
+}
+const dbSet=(p,v)=>dbWrite(p,'PUT',v),dbPatch=(p,v)=>dbWrite(p,'PATCH',v),dbDel=p=>dbWrite(p,'DELETE');
+const dbDelAll=p=>Promise.allSettled(DBS.map(b=>req(b,p,'DELETE'))); /* espera todos */
+async function pingAll(){
+ S.servers=await Promise.all(DBS.map(async b=>{const t=performance.now();try{await req(b,'meta/chatReset','GET');return{ok:true,ms:Math.round(performance.now()-t)}}catch(e){return{ok:false,ms:0}}}));
+ return S.servers;
+}
+
+/* ============ ESTADO ============ */
+let ME=null;
+const S={tab:'home',friends:[],reqs:[],profiles:{},servers:null,chatWith:null,msgs:[],pending:[],ready:false,installing:{}};
+const T={};
+
+function localSettings(){try{return{...DEF,...JSON.parse(localStorage.getItem('evo_settings')||'{}')}}catch(e){return{...DEF}}}
+function applySettings(){
+ const s=ME?ME.settings:localSettings();
+ let th=s.theme;if(th==='auto')th=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+ document.documentElement.dataset.theme=th;
+ const st=document.documentElement.style;st.setProperty('--blue',s.accent);st.setProperty('--fs',s.fontSize+'px');
+ document.body.classList.toggle('rm',!!s.reduceMotion);document.body.classList.toggle('compact',!!s.compact);
+ $('meta[name=theme-color]').content=th==='light'?'#f2f5ff':'#05070d';
+}
+function applyExts(){document.body.classList.toggle('neon',!!(ME&&ME.extensions.neon))}
+function setS(k,v,persist=true){
+ ME.settings[k]=v;localStorage.setItem('evo_settings',JSON.stringify(ME.settings));applySettings();
+ if(persist){
+  dbPatch('users/'+ME.id+'/settings',{[k]:v}).catch(()=>toast('Não foi possível sincronizar','err'));
+  if(k==='allowRequests'){ME.allowRequests=v;dbSet('profiles/'+ME.id+'/allowRequests',v).catch(()=>{})}
+ }
+ if(k==='hideEmail'||k==='compact')renderPage();
+}
+
+/* ============ SESSÃO ============ */
+function buildMe(id,prof,user){
+ return{id,username:prof.username,photo:prof.photo||'',bio:prof.bio||'',allowRequests:prof.allowRequests!==false,
+  email:user.email,created:user.created||prof.created||Date.now(),hash:user.hash,salt:user.salt,
+  settings:{...DEF,...(user.settings||{})},extensions:user.extensions||{}};
+}
+async function loadMe(id,h){
+ const [user,prof]=await Promise.all([dbGet('users/'+id,true),dbGet('profiles/'+id,true)]);
+ if(!user||!prof||(h&&user.hash!==h)){const e=new Error('Sessão inválida');e.fatal=true;throw e}
+ ME=buildMe(id,prof,user);localStorage.setItem('evo_settings',JSON.stringify(ME.settings));
+}
+const saveSession=(id,h)=>localStorage.setItem('evo_s',JSON.stringify({id,h}));
+async function boot(){
+ applySettings();
+ let ses=null;try{ses=JSON.parse(localStorage.getItem('evo_s'))}catch(e){}
+ if(ses&&ses.id){
+  $('#app').innerHTML=`<div class="auth"><div class="logo" style="animation:pulse 1.4s infinite">${ic('bolt',28)}</div></div>`;
+  try{await loadMe(ses.id,ses.h);enterApp();return}
+  catch(e){if(e.fatal)localStorage.removeItem('evo_s');else toast(e.message,'err')}
+ }
+ renderAuth();
+}
+function enterApp(){
+ S.tab='home';S.friends=[];S.reqs=[];S.ready=false;S.chatWith=null;
+ $('#app').innerHTML='<main class="page" id="page"></main><div id="navwrap"></div>';
+ applySettings();applyExts();renderPage();renderNav();
+ refreshSocial();checkMonthlyReset();pingAll().then(updateServers);
+ clearInterval(T.soc);T.soc=setInterval(()=>{if(!document.hidden)refreshSocial()},8000);
+ clearInterval(T.rst);T.rst=setInterval(checkMonthlyReset,600000);
+}
+function logout(){
+ Object.values(T).forEach(clearInterval);closeChat(true);closeModal();
+ localStorage.removeItem('evo_s');ME=null;S.profiles={};S.friends=[];S.reqs=[];document.body.classList.remove('neon');
+ applySettings();renderAuth();
+}
+
+/* ============ AUTENTICAÇÃO ============ */
+function renderAuth(mode='login'){
+ const pw=(n,ph,ac)=>`<div class="pw"><input type="password" name="${n}" placeholder="${ph}" autocomplete="${ac}" required><button type="button" class="eye" onclick="togglePw(this)">Mostrar</button></div>`;
+ const login=`<form onsubmit="submitLogin(event)" autocomplete="on">
+  <label class="lbl">E-mail ou nome de usuário</label><input name="id" autocomplete="username" autocapitalize="none" required>
+  <label class="lbl">Senha</label>${pw('pw','Sua senha','current-password')}
+  <div class="err" id="err"></div><button class="btn full" id="sb">Entrar</button></form>`;
+ const reg=`<form onsubmit="submitRegister(event)" autocomplete="on">
+  <label class="lbl">Nome de usuário</label><input name="un" autocomplete="username" autocapitalize="none" maxlength="20" required>
+  <label class="lbl">E-mail</label><input name="em" type="email" autocomplete="email" required>
+  <label class="lbl">Senha</label>${pw('pw','Mínimo 6 caracteres','new-password')}
+  <label class="lbl">Confirmar senha</label>${pw('pw2','Repita a senha','new-password')}
+  <div class="err" id="err"></div><button class="btn full" id="sb">Criar conta</button></form>`;
+ $('#app').innerHTML=`<div class="auth"><div class="acard">
+  <div class="brand center"><span class="logo">${ic('bolt',26)}</span><h1>Evo<span>Account</span></h1><p class="muted" style="margin:0">Sua conta única no ecossistema Evo.</p></div>
+  <div class="seg tabs"><button class="${mode==='login'?'on':''}" onclick="renderAuth('login')">Entrar</button><button class="${mode==='register'?'on':''}" onclick="renderAuth('register')">Criar conta</button></div>
+  ${mode==='login'?login:reg}</div></div>`;
+}
+function togglePw(b){const i=b.previousElementSibling;const show=i.type==='password';i.type=show?'text':'password';b.textContent=show?'Ocultar':'Mostrar'}
+
+async function submitLogin(e){
+ e.preventDefault();const f=e.target.elements,err=$('#err'),sb=$('#sb');
+ const ident=f.id.value.trim().toLowerCase(),pw=f.pw.value;err.textContent='';
+ if(!ident||!pw)return;sb.disabled=true;sb.textContent='Entrando...';
+ try{
+  const id=await dbGet('idx/'+(ident.includes('@')?'e/':'u/')+key(ident),true);
+  const user=id&&await dbGet('users/'+id,true);
+  const h=user&&await sha256(user.salt+':'+pw);
+  if(!user||h!==user.hash)throw new Error('Usuário ou senha incorretos.');
+  await loadMe(id,h);saveSession(id,h);enterApp();toast('Bem-vindo, '+ME.username+'!','ok');
+ }catch(ex){err.textContent=ex.message;sb.disabled=false;sb.textContent='Entrar'}
+}
+
+/* loader de criação de conta */
+const STEPS=['Conectando aos servidores evolution','Escrevendo sua segurança','Criando seu Evo id'];
+function showLoader(){
+ $('#ldlogo').innerHTML=ic('bolt',34);
+ $('#steps').innerHTML=STEPS.map((t,i)=>`<li id="st${i}"><span class="sp"></span><em style="font-style:normal">${t}</em></li>`).join('');
+ $('#pb').style.width='4%';$('#loader').classList.remove('hidden');
+}
+const hideLoader=()=>$('#loader').classList.add('hidden');
+async function runStep(i,fn){
+ $('#st'+i).className='act';
+ await Promise.all([fn(),sleep(1000)]);
+ $('#st'+i).className='done';$('#pb').style.width=((i+1)/STEPS.length*100)+'%';
+}
+async function submitRegister(e){
+ e.preventDefault();const f=e.target.elements,err=$('#err');
+ const u=f.un.value.trim(),em=f.em.value.trim().toLowerCase(),p=f.pw.value,c=f.pw2.value;
+ if(!/^[A-Za-z0-9_.-]{3,20}$/.test(u))return err.textContent='Nome de usuário: 3 a 20 caracteres (letras, números, _ . -).';
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em))return err.textContent='E-mail inválido.';
+ if(p.length<6)return err.textContent='A senha precisa ter pelo menos 6 caracteres.';
+ if(p!==c)return err.textContent='As senhas não coincidem.';
+ err.textContent='';showLoader();
+ try{
+  let id,salt,hash;const now=Date.now();
+  await runStep(0,async()=>{
+   const [a,b]=await Promise.all([dbGet('idx/u/'+key(u.toLowerCase()),true),dbGet('idx/e/'+key(em),true)]);
+   if(a)throw new Error('Esse nome de usuário já está em uso.');
+   if(b)throw new Error('Esse e-mail já está cadastrado.');
+  });
+  await runStep(1,async()=>{salt=rnd(16);hash=await sha256(salt+':'+p)});
+  await runStep(2,async()=>{
+   do{id=genEvoId()}while(await dbGet('profiles/'+id,true));
+   await Promise.all([
+    dbSet('profiles/'+id,{username:u,photo:'',bio:'',allowRequests:true,created:now}),
+    dbSet('users/'+id,{email:em,salt,hash,created:now,settings:{...DEF}}),
+    dbSet('idx/u/'+key(u.toLowerCase()),id),dbSet('idx/e/'+key(em),id)]);
+  });
+  ME=buildMe(id,{username:u,created:now,allowRequests:true},{email:em,salt,hash,created:now,settings:{...DEF}});
+  saveSession(id,hash);await sleep(500);hideLoader();enterApp();
+  toast('Conta criada! Seu Evo ID: '+id,'ok');
+ }catch(ex){hideLoader();$('#err').textContent=ex.message}
+}
+
+/* ============ AVATAR / MODAL ============ */
+function av(p,size=48){
+ const st=`width:${size}px;height:${size}px;font-size:${size*.42}px`;
+ if(p&&p.photo&&p.photo.startsWith('data:image/'))return`<img class="av" style="${st}" src="${esc(p.photo)}" alt="">`;
+ return`<div class="av" style="${st}">${esc(((p&&p.username)||'?')[0].toUpperCase())}</div>`;
+}
+function openModal(html){closeModal();const m=document.createElement('div');m.className='overlay';m.id='modal';m.innerHTML=`<div class="sheet">${html}</div>`;m.addEventListener('mousedown',e=>{if(e.target===m)closeModal()});document.body.appendChild(m)}
+function closeModal(){const m=$('#modal');if(m)m.remove()}
+function askConfirm(t,x,ok='Confirmar',danger=true){
+ return new Promise(res=>{openModal(`<h2>${t}</h2><p class="muted">${x}</p><div class="mrow"><button class="btn ghost" id="cn">Cancelar</button><button class="btn ${danger?'danger':''}" id="cy">${ok}</button></div>`);
+  $('#cn').onclick=()=>{closeModal();res(false)};$('#cy').onclick=()=>{closeModal();res(true)}});
+}
+
+/* ============ RENDER ============ */
+function renderNav(){
+ const it=[['home','home','Início'],['friends','users','Amigos'],['chat','chat','Chat'],['store','store','Loja'],['settings','gear','Config']];
+ $('#navwrap').innerHTML=`<nav class="navbar"><div class="in">${it.map(([k,i,l])=>`<button class="${S.tab===k?'on':''}" onclick="go('${k}')">${ic(i,22)}<span>${l}</span>${k==='friends'&&S.reqs.length?`<b class="dot">${S.reqs.length}</b>`:''}</button>`).join('')}</div></nav>`;
+}
+function renderPage(){
+ const p=$('#page');if(!p||!ME)return;clearInterval(T.clk);
+ const v={home:vHome,friends:vFriends,chat:vChat,store:vStore,settings:vSettings}[S.tab];
+ p.innerHTML=v();if(S.tab==='home'&&ME.extensions.clock)startClock();
+}
+function go(t){S.tab=t;renderNav();renderPage();window.scrollTo(0,0);if(t==='friends'||t==='chat')refreshSocial()}
+function updateServers(){const el=$('#srv');if(el&&S.servers)el.textContent=S.servers.filter(x=>x.ok).length+'/'+DBS.length+' online'}
+
+function maskEmail(e){const[a,b]=e.split('@');return esc(a[0]+'•••@'+b)}
+function vHome(){
+ const srv=S.servers?S.servers.filter(x=>x.ok).length+'/'+DBS.length+' online':'verificando…';
+ const row=(i,t,v)=>`<div class="row"><span class="ri">${ic(i)}</span><div class="grow"><b>${t}</b></div><span class="val">${v}</span></div>`;
+ return`<div class="top"><div class="brand"><span class="logo sm">${ic('bolt',18)}</span><b>Evo<span>Account</span></b></div></div>
+ <section class="card hero">
+  <button class="avbtn" onclick="openPhotoMenu()" aria-label="Alterar foto">${av(ME,104)}<span class="cam">${ic('camera',16)}</span></button>
+  <h2>${esc(ME.username)}</h2>
+  <div class="idrow"><code>${ME.id}</code><button class="btn sm" id="cpb" onclick="copyId()">${ic('copy',16)} Copiar</button></div>
+  <p class="bio ${ME.bio?'':'muted'}">${ME.bio?esc(ME.bio):'Sem bio ainda — edite em Configurações.'}</p>
+ </section>
+ <section class="grid2">
+  <div class="card stat tap" onclick="go('friends')"><b>${S.friends.length}</b><span>Amigos Evo</span></div>
+  <div class="card stat tap" onclick="go('friends')"><b>${S.reqs.length}</b><span>Solicitações</span></div>
+ </section>
+ ${ME.extensions.clock?'<section class="card clockw"><div id="clk"></div><div class="muted" id="clkd"></div></section>':''}
+ <section class="card"><h3 class="sec nm">Base da conta</h3>
+  ${row('user','Usuário','@'+esc(ME.username))}
+  ${row('lock','E-mail',ME.settings.hideEmail?maskEmail(ME.email):esc(ME.email))}
+  ${row('bolt','Evo ID',ME.id)}
+  ${row('clock','Membro desde',new Date(ME.created).toLocaleDateString('pt-BR'))}
+  ${row('store','Servidores Evo',`<span id="srv">${srv}</span>`)}
+ </section>
+ <section class="grid2">
+  <button class="btn" onclick="go('friends');openAdd()">${ic('plus',18)} Add amigo</button>
+  <button class="btn ghost" onclick="go('chat')">${ic('chat',18)} Abrir chat</button>
+ </section>`;
+}
+function startClock(){const t=()=>{const c=$('#clk');if(!c)return clearInterval(T.clk);const d=new Date();c.textContent=d.toLocaleTimeString('pt-BR');$('#clkd').textContent=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long'})};t();T.clk=setInterval(t,1000)}
+async function copyId(){
+ try{await navigator.clipboard.writeText(ME.id)}catch(e){const t=document.createElement('textarea');t.value=ME.id;document.body.appendChild(t);t.select();try{document.execCommand('copy')}catch(_){}t.remove()}
+ const b=$('#cpb');if(b){b.innerHTML=ic('check',16)+' Copiado!';setTimeout(()=>{if($('#cpb'))$('#cpb').innerHTML=ic('copy',16)+' Copiar'},1600)}toast('Evo ID copiado!','ok');
+}
+
+/* ---- foto de perfil (base64) ---- */
+function openPhotoMenu(){
+ openModal(`<h2>Foto de perfil</h2><p class="muted">Personalize sua foto. Ela é salva em base64 nos servidores Evo.</p>
+ <div class="mrow" style="flex-direction:column"><button class="btn" id="pk">${ic('camera',18)} Escolher foto</button>${ME.photo?`<button class="btn ghost" id="rm">${ic('trash',18)} Remover foto</button>`:''}<button class="btn ghost" onclick="closeModal()">Cancelar</button></div>`);
+ $('#pk').onclick=pickPhoto;const r=$('#rm');if(r)r.onclick=async()=>{try{await dbSet('profiles/'+ME.id+'/photo','');ME.photo='';S.profiles[ME.id]=null;closeModal();renderPage();toast('Foto removida','ok')}catch(e){toast(e.message,'err')}};
+}
+function pickPhoto(){
+ const inp=document.createElement('input');inp.type='file';inp.accept='image/*';
+ inp.onchange=()=>{const f=inp.files[0];if(!f)return;if(!f.type.startsWith('image/'))return toast('Escolha uma imagem','err');
+  const rd=new FileReader();rd.onload=()=>{const img=new Image();img.onload=()=>cropModal(img);img.onerror=()=>toast('Imagem inválida','err');img.src=rd.result};rd.readAsDataURL(f)};
+ inp.click();
+}
+function cropModal(img){
+ const st={z:1,ox:0,oy:0};
+ openModal(`<h2>Ajustar foto</h2><p class="muted">Arraste para posicionar e use o zoom.</p><div class="cropwrap"><canvas id="cv" width="256" height="256"></canvas></div>
+ <label class="lbl">Zoom</label><input type="range" id="zm" min="1" max="3" step="0.01" value="1">
+ <div class="mrow"><button class="btn ghost" onclick="closeModal()">Cancelar</button><button class="btn" id="svp">Salvar foto</button></div>`);
+ const cv=$('#cv'),c=cv.getContext('2d');
+ const draw=()=>{const base=256/Math.min(img.width,img.height)*st.z,w=img.width*base,h=img.height*base,mx=(w-256)/2,my=(h-256)/2;
+  st.ox=Math.max(-mx,Math.min(mx,st.ox));st.oy=Math.max(-my,Math.min(my,st.oy));
+  c.fillStyle='#000';c.fillRect(0,0,256,256);c.drawImage(img,128-w/2+st.ox,128-h/2+st.oy,w,h)};
+ draw();$('#zm').oninput=e=>{st.z=+e.target.value;draw()};
+ let drag=null;
+ cv.onpointerdown=e=>{drag={x:e.clientX,y:e.clientY,ox:st.ox,oy:st.oy};cv.setPointerCapture(e.pointerId)};
+ cv.onpointermove=e=>{if(!drag)return;const k=256/cv.getBoundingClientRect().width;st.ox=drag.ox+(e.clientX-drag.x)*k;st.oy=drag.oy+(e.clientY-drag.y)*k;draw()};
+ cv.onpointerup=cv.onpointercancel=()=>{drag=null};
+ $('#svp').onclick=async()=>{
+  const b=$('#svp');b.disabled=true;b.textContent='Salvando...';
+  try{const data=cv.toDataURL('image/jpeg',.85);await dbSet('profiles/'+ME.id+'/photo',data);ME.photo=data;S.profiles[ME.id]=null;closeModal();renderPage();toast('Foto atualizada!','ok')}
+  catch(e){toast(e.message,'err');b.disabled=false;b.textContent='Salvar foto'}};
+}
+
+/* ============ AMIGOS ============ */
+async function loadProfile(id,force){
+ const c=S.profiles[id];if(c&&!force&&Date.now()-c._t<60000)return c;
+ try{const p=await dbGet('profiles/'+id);S.profiles[id]=p?{...p,_t:Date.now()}:{username:'Conta removida',_t:Date.now(),gone:true}}catch(e){}
+ return S.profiles[id];
+}
+async function refreshSocial(){
+ if(!ME)return;
+ try{
+  const [fo,ro]=await Promise.all([dbGet('friends/'+ME.id),dbGet('requests/'+ME.id)]);
+  const fids=Object.keys(fo||{}).filter(isId),rids=Object.keys(ro||{}).filter(isId);
+  await Promise.all([...new Set([...fids,...rids])].map(id=>loadProfile(id)));
+  if(!ME)return;const prev=S.reqs.length;
+  const byName=(a,b)=>((a.p&&a.p.username)||'').localeCompare((b.p&&b.p.username)||'');
+  S.friends=fids.map(id=>({id,ts:fo[id],p:S.profiles[id]})).sort(byName);
+  S.reqs=rids.map(id=>({id,ts:(ro[id]||{}).ts,p:S.profiles[id]})).sort(byName);
+  if(S.ready&&S.reqs.length>prev&&ME.settings.notifyReq){toast('Nova solicitação de amizade!');beep()}
+  S.ready=true;renderNav();
+  if(['home','friends','chat'].includes(S.tab)&&!$('#modal'))renderPage();
+ }catch(e){}
+}
+function vFriends(){
+ const f=S.friends,r=S.reqs;
+ const reqRow=x=>`<div class="frow">${av(x.p,46)}<div class="grow"><b>${esc(x.p&&x.p.username)}</b><small>${x.id}</small></div><div class="acts"><button class="btn sm" onclick="acceptReq('${x.id}')">${ic('check',16)}</button><button class="btn sm ghost" onclick="declineReq('${x.id}')">${ic('x',16)}</button></div></div>`;
+ const frRow=x=>`<div class="frow">${av(x.p,46)}<div class="grow"><b>${esc(x.p&&x.p.username)}</b><small>${x.id}</small></div><div class="acts"><button class="btn sm" onclick="openChat('${x.id}')">${ic('chat',16)}</button><button class="btn sm ghost" onclick="removeFriend('${x.id}')">${ic('trash',16)}</button></div></div>`;
+ return`<div class="top"><h1>Amigos Evo</h1><button class="fab" onclick="openAdd()" aria-label="Adicionar amigo">${ic('plus',24)}</button></div>
+ ${r.length?`<h3 class="sec">Solicitações (${r.length})</h3>${r.map(reqRow).join('')}`:''}
+ <h3 class="sec">Meus amigos (${f.length})</h3>
+ ${f.length?f.map(frRow).join(''):`<div class="card empty">Você ainda não tem amigos Evo.<br>Toque no <b>+</b> e adicione alguém pelo Evo ID.</div>`}`;
+}
+function openAdd(){
+ openModal(`<h2>Adicionar amigo Evo</h2><p class="muted">Digite o Evo ID do seu amigo para enviar uma solicitação.</p>
+ <input id="aid" placeholder="EV-12345678" autocapitalize="characters" autocomplete="off" maxlength="11"><div class="err" id="aerr"></div>
+ <div class="mrow"><button class="btn ghost" onclick="closeModal()">Cancelar</button><button class="btn" id="asb">Enviar solicitação</button></div>`);
+ $('#asb').onclick=sendRequest;$('#aid').onkeydown=e=>{if(e.key==='Enter')sendRequest()};setTimeout(()=>{const a=$('#aid');a&&a.focus()},100);
+}
+async function sendRequest(){
+ let id=$('#aid').value.trim().toUpperCase();if(/^\d{8}$/.test(id))id='EV-'+id;
+ const er=m=>{$('#aerr').textContent=m},b=$('#asb');er('');
+ if(!isId(id))return er('Evo ID inválido. Use o formato EV-12345678.');
+ if(id===ME.id)return er('Você não pode adicionar a si mesmo.');
+ b.disabled=true;b.textContent='Enviando...';
+ try{
+  const [prof,isF,mine,theirs]=await Promise.all([dbGet('profiles/'+id,true),dbGet(`friends/${ME.id}/${id}`,true),dbGet(`requests/${ME.id}/${id}`,true),dbGet(`requests/${id}/${ME.id}`,true)]);
+  if(!prof)throw new Error('Nenhuma conta encontrada com esse Evo ID.');
+  if(isF)throw new Error('Vocês já são amigos.');
+  if(mine){await acceptReq(id,true);closeModal();return toast('Vocês agora são amigos!','ok')}
+  if(theirs)throw new Error('Solicitação já enviada. Aguarde a resposta.');
+  if(prof.allowRequests===false)throw new Error('Essa pessoa não está aceitando solicitações.');
+  await dbSet(`requests/${id}/${ME.id}`,{from:ME.id,ts:Date.now()});
+  closeModal();toast('Solicitação enviada para '+prof.username,'ok');
+ }catch(e){er(e.message);b.disabled=false;b.textContent='Enviar solicitação'}
+}
+async function acceptReq(id,quiet){
+ try{const ts=Date.now();
+  await Promise.all([dbSet(`friends/${ME.id}/${id}`,ts),dbSet(`friends/${id}/${ME.id}`,ts)]);
+  await dbDel(`requests/${ME.id}/${id}`);if(!quiet)toast('Amigo adicionado!','ok');await refreshSocial();
+ }catch(e){toast(e.message,'err')}
+}
+async function declineReq(id){try{await dbDel(`requests/${ME.id}/${id}`);S.reqs=S.reqs.filter(r=>r.id!==id);renderNav();renderPage()}catch(e){toast(e.message,'err')}}
+async function removeFriend(id){
+ const p=S.profiles[id];
+ if(!await askConfirm('Remover amigo?',`Remover <b>${esc(p&&p.username)}</b> da sua lista? As mensagens do chat também serão apagadas.`,'Remover'))return;
+ try{await Promise.all([dbDel(`friends/${ME.id}/${id}`),dbDel(`friends/${id}/${ME.id}`)]);dbDelAll('chats/'+cid(ME.id,id));
+  S.friends=S.friends.filter(f=>f.id!==id);renderNav();renderPage();toast('Amigo removido')}catch(e){toast(e.message,'err')}
+}
+
+/* ============ CHAT ============ */
+function resetText(){const n=new Date(),nx=new Date(n.getFullYear(),n.getMonth()+1,1),d=Math.ceil((nx-n)/864e5);return`⚠️ O chat é zerado todo dia 1 do mês. Próximo reset em ${d} dia${d>1?'s':''} (${nx.toLocaleDateString('pt-BR')}).`}
+function vChat(){
+ return`<div class="top"><h1>Chat Evo</h1></div>
+ <div class="card" style="font-size:.88rem;border-color:var(--blue)">${resetText()}<br><span class="muted">Você só conversa com quem adicionou como amigo.</span></div>
+ ${S.friends.length?S.friends.map(x=>`<div class="frow tap" onclick="openChat('${x.id}')">${av(x.p,46)}<div class="grow"><b>${esc(x.p&&x.p.username)}</b><small>Toque para conversar</small></div>${ic('chat',20)}</div>`).join('')
+ :`<div class="card empty">Nenhum amigo ainda.<br><button class="btn" style="margin-top:12px" onclick="go('friends')">Adicionar amigos</button></div>`}`;
+}
+function openChat(fid){
+ closeChat(true);const p=S.profiles[fid];
+ S.chatWith=fid;S.msgs=[];S.pending=[];S.sig='';S.firstLoad=true;S.lastIn='';
+ const d=document.createElement('div');d.className='conv';d.id='conv';
+ d.innerHTML=`<div class="cwrap"><header class="chead"><button class="ib" onclick="closeChat()">${ic('back',24)}</button>${av(p,40)}<div class="grow"><b>${esc(p&&p.username)}</b><small>${fid}</small></div></header>
+ <div class="warn">${resetText()}</div><div id="msgs" class="msgs"></div>
+ <form class="comp" onsubmit="sendMsg(event)"><textarea id="mi" rows="1" maxlength="1000" placeholder="Escreva uma mensagem"></textarea><button class="btn send" type="submit" aria-label="Enviar">${ic('send',20)}</button></form></div>`;
+ document.body.appendChild(d);document.body.classList.add('noscroll');
+ const mi=$('#mi');
+ mi.oninput=()=>{mi.style.height='auto';mi.style.height=Math.min(mi.scrollHeight,120)+'px'};
+ mi.onkeydown=e=>{if(e.key==='Enter'&&!e.shiftKey&&ME.settings.enterToSend&&!/Mobi|Android/i.test(navigator.userAgent)){e.preventDefault();sendMsg(e)}};
+ renderMsgs();pollChat();clearInterval(T.chat);T.chat=setInterval(()=>{if(!document.hidden)pollChat()},ME.settings.pollSec*1000);
+}
+function closeChat(silent){
+ clearInterval(T.chat);const c=$('#conv');if(c)c.remove();document.body.classList.remove('noscroll');S.chatWith=null;if(!silent)renderPage();
+}
+async function pollChat(){
+ const fid=S.chatWith;if(!fid)return;
+ try{
+  const o=(await dbGet('chats/'+cid(ME.id,fid)))||{};if(S.chatWith!==fid)return;
+  const arr=Object.entries(o).filter(([k,v])=>v&&typeof v.t==='string').sort(([a],[b])=>a<b?-1:1).slice(-300).map(([k,v])=>({k,f:v.f,t:v.t,ts:v.ts}));
+  S.pending=S.pending.filter(p=>!arr.some(m=>m.k===p.k));
+  const last=arr[arr.length-1],sig=arr.length+'|'+(last?last.k:'')+'|'+S.pending.length;
+  if(last&&last.f!==ME.id&&S.lastIn&&last.k!==S.lastIn)beep();
+  S.lastIn=last&&last.f!==ME.id?last.k:S.lastIn;
+  if(sig!==S.sig||S.firstLoad){S.msgs=arr;S.sig=sig;renderMsgs()}
+ }catch(e){}
+}
+function renderMsgs(){
+ const box=$('#msgs');if(!box)return;
+ const near=S.firstLoad||box.scrollHeight-box.scrollTop-box.clientHeight<140;
+ const all=[...S.msgs,...S.pending.filter(p=>!S.msgs.some(m=>m.k===p.k))];let last='';
+ box.innerHTML=all.length?all.map(m=>{const d=new Date(m.ts),dk=d.toLocaleDateString('pt-BR');let sep='';if(dk!==last){last=dk;sep=`<div class="dsep">${dk}</div>`}
+  return sep+`<div class="b ${m.f===ME.id?'me':'th'}"><span>${esc(m.t)}</span>${ME.settings.showTime?`<time>${hhmm(d)}</time>`:''}</div>`}).join('')
+  :'<div class="muted center" style="margin:auto">Nenhuma mensagem ainda. Diga oi! 👋</div>';
+ if(near)box.scrollTop=box.scrollHeight;S.firstLoad=false;
+}
+async function sendMsg(e){
+ e.preventDefault();const mi=$('#mi'),t=mi.value.trim();if(!t||!S.chatWith)return;
+ mi.value='';mi.style.height='auto';
+ const k=String(Date.now()).padStart(13,'0')+'-'+rnd(3),m={k,f:ME.id,t,ts:Date.now()},fid=S.chatWith;
+ S.pending.push(m);renderMsgs();
+ try{await dbSet(`chats/${cid(ME.id,fid)}/${k}`,{f:m.f,t,ts:m.ts})}
+ catch(ex){S.pending=S.pending.filter(x=>x.k!==k);renderMsgs();toast('Falha ao enviar a mensagem','err');if($('#mi'))$('#mi').value=t}
+}
+/* reset mensal: apaga TODOS os chats no 1º acesso de cada mês (dia 1) */
+async function checkMonthlyReset(){
+ try{
+  const d=new Date(),mk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  const last=await dbGet('meta/chatReset',true);
+  if(!last||mk>last){
+   await dbDelAll('chats');await dbSet('meta/chatReset',mk);
+   if(S.chatWith){S.msgs=[];S.pending=[];S.sig='';renderMsgs()}
+  }
+ }catch(e){}
+}
+
+/* ============ LOJA DE EXTENSÕES ============ */
+function vStore(){
+ return`<div class="top"><h1>Loja de extensões</h1></div><p class="muted" style="margin:-6px 4px 14px">Baixe extensões para turbinar o seu EvoAccount.</p>
+ ${EXTS.map(x=>{const on=!!ME.extensions[x.id],pct=S.installing[x.id];
+  return`<div class="card"><div class="ext"><span class="exi">${ic(x.icon,28)}</span><div class="grow"><b style="font-size:1.05rem">${x.name}</b> ${on?'<span class="pill">Instalada</span>':''}
+  <div class="meta">v${x.ver} • ${x.size}</div><div>${x.desc}</div></div></div>
+  ${pct!==undefined?`<div class="prog" style="margin-top:12px"><i style="width:${pct}%"></i></div><small style="margin-top:6px">Baixando… ${pct}%</small>`:''}
+  <div class="acts"><button class="btn" ${on||pct!==undefined?'disabled':''} onclick="installExt('${x.id}')">${ic('download',18)} Baixar</button><button class="btn danger" ${!on||pct!==undefined?'disabled':''} onclick="deleteExt('${x.id}')">${ic('trash',18)} Deletar</button></div></div>`}).join('')}
+ <div class="card empty">Novas extensões chegando em breve ✨</div>`;
+}
+function installExt(id){
+ if(S.installing[id]!==undefined)return;S.installing[id]=0;renderPage();
+ const iv=setInterval(async()=>{
+  S.installing[id]=Math.min(100,S.installing[id]+Math.round(8+Math.random()*16));
+  if(S.installing[id]>=100){
+   clearInterval(iv);
+   try{await dbSet(`users/${ME.id}/extensions/${id}`,true);ME.extensions[id]=true;applyExts();toast('Extensão instalada!','ok')}catch(e){toast(e.message,'err')}
+   delete S.installing[id];
+  }
+  if(S.tab==='store')renderPage();
+ },280);
+}
+async function deleteExt(id){
+ const x=EXTS.find(e=>e.id===id);
+ if(!await askConfirm('Deletar extensão?',`Remover <b>${x.name}</b> do seu EvoAccount?`,'Deletar'))return;
+ try{await dbDel(`users/${ME.id}/extensions/${id}`);delete ME.extensions[id];applyExts();renderPage();toast('Extensão removida')}catch(e){toast(e.message,'err')}
+}
+
+/* ============ CONFIGURAÇÕES ============ */
+function vSettings(){
+ const s=ME.settings;
+ const sw=k=>`<label class="sw"><input type="checkbox" ${s[k]?'checked':''} onchange="setS('${k}',this.checked)"><i></i></label>`;
+ const row=(ico,t,sub,right='',oc='')=>`<div class="row${oc?' tap':''}"${oc?` onclick="${oc}"`:''}><span class="ri">${ic(ico)}</span><div class="grow"><b>${t}</b>${sub?`<small>${sub}</small>`:''}</div>${right}</div>`;
+ const seg=(k,o)=>`<div class="seg" style="margin:4px 0 8px">${o.map(([v,l])=>`<button class="${s[k]==v?'on':''}" onclick="setS('${k}',${typeof v==='string'?`'${v}'`:v});renderPage()">${l}</button>`).join('')}</div>`;
+ const sw2=['#2f6bff','#1d4ed8','#0a84ff','#00a2ff','#5b8cff'].map(c=>`<button style="background:${c}" class="${s.accent===c?'on':''}" onclick="setS('accent','${c}');renderPage()" aria-label="${c}"></button>`).join('');
+ return`<div class="top"><h1>Configurações</h1></div>
+ <h3 class="sec">Perfil</h3><div class="card">
+  ${row('camera','Foto de perfil','Troque ou remova sua foto','', 'openPhotoMenu()')}
+  ${row('user','Editar perfil','Nome de usuário e bio','', 'openEditProfile()')}
+  ${row('bolt','Meu Evo ID',ME.id,`<button class="btn sm ghost" onclick="copyId()">${ic('copy',16)}</button>`)}
+ </div>
+ <h3 class="sec">Segurança</h3><div class="card">
+  ${row('lock','Trocar senha','Exige a senha atual','', 'openChangePw()')}
+  ${row('logout','Sair da conta','Encerrar sessão neste dispositivo','', 'doLogout()')}
+ </div>
+ <h3 class="sec">Aparência</h3><div class="card">
+  <b>Tema</b>${seg('theme',[['dark','Escuro'],['light','Claro'],['auto','Auto']])}
+  <b>Cor de destaque</b><div class="swatches" style="margin:8px 0 14px">${sw2}</div>
+  <b>Tamanho da fonte: ${s.fontSize}px</b><input type="range" min="14" max="20" step="1" value="${s.fontSize}" oninput="setS('fontSize',+this.value,false)" onchange="setS('fontSize',+this.value);renderPage()">
+  ${row('store','Modo compacto','Cartões com menos espaçamento',sw('compact'))}
+  ${row('bolt','Reduzir animações','Para economizar bateria',sw('reduceMotion'))}
+ </div>
+ <h3 class="sec">Notificações</h3><div class="card">
+  ${row('chat','Som de mensagens','Toca um aviso ao receber mensagem',sw('sound'))}
+  ${row('users','Avisar solicitações','Mostrar aviso de novos pedidos de amizade',sw('notifyReq'))}
+ </div>
+ <h3 class="sec">Privacidade</h3><div class="card">
+  ${row('users','Receber solicitações','Permitir que outros te adicionem pelo Evo ID',sw('allowRequests'))}
+  ${row('lock','Ocultar meu e-mail','Mascara o e-mail no Dashboard',sw('hideEmail'))}
+ </div>
+ <h3 class="sec">Chat</h3><div class="card">
+  ${row('send','Enter para enviar','No computador, Enter envia (Shift+Enter quebra linha)',sw('enterToSend'))}
+  ${row('clock','Mostrar horário','Horário em cada mensagem',sw('showTime'))}
+  <b>Atualizar o chat a cada</b>${seg('pollSec',[[2,'2s'],[4,'4s'],[8,'8s']])}
+ </div>
+ <h3 class="sec">Dados e servidores</h3><div class="card">
+  ${row('store','Status dos servidores','Testar os 5 bancos Evo','', 'openServers()')}
+  ${row('download','Exportar meus dados','Baixar um arquivo JSON','', 'exportData()')}
+  ${row('trash','Limpar cache local','Recarrega perfis e preferências','', 'clearCache()')}
+ </div>
+ <h3 class="sec">Sobre</h3><div class="card">
+  ${row('bolt','EvoAccount','Versão 1.0.0 • Ecossistema Evo')}
+ </div>
+ <h3 class="sec">Zona de perigo</h3><div class="card">
+  ${row('trash','Excluir conta','Apaga sua conta e dados permanentemente','', 'openDelete()')}
+ </div>`;
+}
+async function doLogout(){if(await askConfirm('Sair da conta?','Você precisará entrar novamente neste dispositivo.','Sair',false))logout()}
+function openEditProfile(){
+ openModal(`<h2>Editar perfil</h2><label class="lbl">Nome de usuário</label><input id="eu" value="${esc(ME.username)}" maxlength="20" autocapitalize="none">
+ <label class="lbl">Bio (até 80 caracteres)</label><input id="eb" value="${esc(ME.bio)}" maxlength="80"><div class="err" id="eerr"></div>
+ <div class="mrow"><button class="btn ghost" onclick="closeModal()">Cancelar</button><button class="btn" id="esb">Salvar</button></div>`);
+ $('#esb').onclick=async()=>{
+  const u=$('#eu').value.trim(),b=$('#eb').value.trim(),er=m=>{$('#eerr').textContent=m};
+  if(!/^[A-Za-z0-9_.-]{3,20}$/.test(u))return er('Nome de usuário: 3 a 20 caracteres (letras, números, _ . -).');
+  $('#esb').disabled=true;
+  try{
+   if(u.toLowerCase()!==ME.username.toLowerCase()){
+    const ex=await dbGet('idx/u/'+key(u.toLowerCase()),true);if(ex&&ex!==ME.id)throw new Error('Esse nome de usuário já está em uso.');
+    await dbSet('idx/u/'+key(u.toLowerCase()),ME.id);await dbDel('idx/u/'+key(ME.username.toLowerCase()));
+   }
+   await dbPatch('profiles/'+ME.id,{username:u,bio:b});ME.username=u;ME.bio=b;S.profiles[ME.id]=null;
+   closeModal();renderPage();toast('Perfil atualizado!','ok');
+  }catch(e){er(e.message);$('#esb').disabled=false}
+ };
+}
+function openChangePw(){
+ openModal(`<h2>Trocar senha</h2><label class="lbl">Senha atual</label><input type="password" id="p0" autocomplete="current-password">
+ <label class="lbl">Nova senha</label><input type="password" id="p1" autocomplete="new-password">
+ <label class="lbl">Confirmar nova senha</label><input type="password" id="p2" autocomplete="new-password"><div class="err" id="perr"></div>
+ <div class="mrow"><button class="btn ghost" onclick="closeModal()">Cancelar</button><button class="btn" id="psb">Alterar senha</button></div>`);
+ $('#psb').onclick=async()=>{
+  const a=$('#p0').value,b=$('#p1').value,c=$('#p2').value,er=m=>{$('#perr').textContent=m};
+  if(!a||!b||!c)return er('Preencha todos os campos.');
+  if(b.length<6)return er('A nova senha precisa ter pelo menos 6 caracteres.');
+  if(b!==c)return er('A confirmação não coincide com a nova senha.');
+  if(a===b)return er('A nova senha deve ser diferente da atual.');
+  $('#psb').disabled=true;
+  try{
+   if(await sha256(ME.salt+':'+a)!==ME.hash)throw new Error('Senha atual incorreta.');
+   const salt=rnd(16),hash=await sha256(salt+':'+b);
+   await dbPatch('users/'+ME.id,{salt,hash});ME.salt=salt;ME.hash=hash;saveSession(ME.id,hash);
+   closeModal();toast('Senha alterada com sucesso!','ok');
+  }catch(e){er(e.message);$('#psb').disabled=false}
+ };
+}
+async function openServers(){
+ openModal('<h2>Servidores Evo</h2><p class="muted">Testando conexão…</p>');
+ const r=await pingAll();
+ openModal(`<h2>Servidores Evo</h2><p class="muted">${r.filter(x=>x.ok).length} de ${DBS.length} online</p>${r.map((x,i)=>`<div class="row"><span class="ri" style="color:${x.ok?'var(--ok)':'var(--danger)'}">${ic(x.ok?'check':'x')}</span><div class="grow"><b>Evo Server ${i+1}</b><small>${x.ok?x.ms+' ms':'Offline'}</small></div></div>`).join('')}<div class="mrow"><button class="btn" onclick="closeModal()">Fechar</button></div>`);
+}
+function exportData(){
+ const d={evoId:ME.id,username:ME.username,email:ME.email,bio:ME.bio,created:ME.created,settings:ME.settings,extensions:ME.extensions,friends:S.friends.map(f=>f.id),exportedAt:new Date().toISOString()};
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}));a.download=`evoaccount-${ME.id}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000);toast('Dados exportados','ok');
+}
+function clearCache(){S.profiles={};S.servers=null;refreshSocial();pingAll().then(updateServers);toast('Cache limpo','ok')}
+function openDelete(){
+ openModal(`<h2 style="color:var(--danger)">Excluir conta</h2><p class="muted">Isso apaga seu perfil, amigos e conversas de forma permanente. Confirme com sua senha.</p>
+ <input type="password" id="dp" placeholder="Sua senha" autocomplete="current-password"><div class="err" id="derr"></div>
+ <div class="mrow"><button class="btn ghost" onclick="closeModal()">Cancelar</button><button class="btn danger" id="dsb">Excluir</button></div>`);
+ $('#dsb').onclick=async()=>{
+  $('#dsb').disabled=true;
+  try{
+   if(await sha256(ME.salt+':'+$('#dp').value)!==ME.hash)throw new Error('Senha incorreta.');
+   const id=ME.id,fids=S.friends.map(f=>f.id);
+   await Promise.all([dbDelAll('profiles/'+id),dbDelAll('users/'+id),dbDelAll('idx/u/'+key(ME.username.toLowerCase())),dbDelAll('idx/e/'+key(ME.email)),dbDelAll('friends/'+id),dbDelAll('requests/'+id),
+    ...fids.map(f=>dbDelAll(`friends/${f}/${id}`)),...fids.map(f=>dbDelAll('chats/'+cid(id,f)))]);
+   localStorage.removeItem('evo_settings');logout();toast('Conta excluída');
+  }catch(e){$('#derr').textContent=e.message;$('#dsb').disabled=false}
+ };
+}
+
+boot();
+</script>
 </body>
 </html>
